@@ -27,3 +27,11 @@ CARGO_BUILD_FLAGS:append = " --config 'profile.release.strip="none"'"
 cargo_do_compile:prepend:class-target() {
     sed -i '/panic = \"abort\"/d' ${S}/${CARGO_SRC_DIR}/Cargo.toml
 }
+
+do_install:append() {
+    install -d ${D}${sysconfdir}/rugix
+    echo overlay = \"disabled\" > ${D}${sysconfdir}/rugix/state.toml
+    install -d ${D}${sysconfdir}/rugix/state
+    echo [[persist]] > ${D}${sysconfdir}/rugix/state/etc.toml
+    echo directory = \"/etc\" >> ${D}${sysconfdir}/rugix/state/etc.toml
+}

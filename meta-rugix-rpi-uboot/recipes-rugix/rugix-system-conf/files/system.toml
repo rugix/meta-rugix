@@ -1,4 +1,10 @@
 #:schema https://raw.githubusercontent.com/silitics/rugix/refs/tags/v0.8.0/schemas/rugix-ctrl-system.schema.json
+[config-partition]
+partition = 1
+protected = true
+
+[data-partition]
+partition = 4
 
 [boot-flow]
 type = "uboot"

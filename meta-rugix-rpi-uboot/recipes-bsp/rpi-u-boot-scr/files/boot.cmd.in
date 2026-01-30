@@ -29,6 +29,6 @@ fi
 echo "Bootdev: " ${rugix_boot_dev}
 
 setenv bootargs "${bootargs} root=${rugix_root} init=/usr/bin/rugix-ctrl ro"
-
+saveenv
 load ${rugix_boot_dev} ${kernel_addr_r} boot/@@KERNEL_IMAGETYPE@@
 @@KERNEL_BOOTCMD@@ ${kernel_addr_r} - ${fdt_addr}
