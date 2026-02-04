@@ -1,14 +1,19 @@
-name: CI
+name: CI Pipeline
 
 on:
   push:
   pull_request:
     branches: [main]
 
+env:
+  KAS_CONTAINER_ENGINE: podman
+  KAS_WORK_DIR: ${{ github.workspace }}/_kas
+  KAS_BUILD_DIR: ${{ github.workspace }}/build
+
 jobs:
   validate:
     name: Validate Configuration
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, nixos, yocto]
     strategy:
       matrix:
         config:
@@ -17,19 +22,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Free up disk space
-        run: |
-          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
-          df -h
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y chrpath diffstat
-          pip install kas
-
       - name: Validate kas config and checkout layers
-        run: kas checkout ${{ matrix.config }}
+        run: kas-container checkout ${{ matrix.config }}
 
       - name: Parse recipes
-        run: kas shell ${{ matrix.config }} -c "bitbake -p"
+        run: kas-container shell ${{ matrix.config }} -c "bitbake -p"
