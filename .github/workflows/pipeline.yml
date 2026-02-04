@@ -22,8 +22,11 @@ jobs:
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
           df -h
 
-      - name: Install kas
-        run: pip install kas
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chrpath diffstat
+          pip install kas
 
       - name: Validate kas config and checkout layers
         run: kas checkout ${{ matrix.config }}
