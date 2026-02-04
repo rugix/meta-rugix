@@ -51,7 +51,6 @@ repos:
     branch: scarthgap/rust
 
   meta-rugix:
-    path: ../
     layers:
       meta-rugix-core:
       meta-rugix-rpi-tryboot:
