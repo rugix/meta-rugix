@@ -1,0 +1,35 @@
+name: CI Pipeline
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+
+env:
+  KAS_CONTAINER_ENGINE: podman
+  KAS_WORK_DIR: ${{ github.workspace }}/_kas
+  KAS_BUILD_DIR: ${{ github.workspace }}/build
+
+jobs:
+  build:
+    name: Build
+    runs-on: [self-hosted, nixos, yocto]
+    strategy:
+      matrix:
+        config:
+          - examples/raspberrypi.yaml
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create KAS directories
+        run: mkdir -p "$KAS_WORK_DIR" "$KAS_BUILD_DIR"
+
+      - name: Validate kas config and checkout layers
+        run: kas-container checkout ${{ matrix.config }}
+
+      - name: Parse recipes
+        run: kas-container shell ${{ matrix.config }} -c "bitbake -p"
+
+      - name: Build
+        run: kas-container build ${{ matrix.config }}
