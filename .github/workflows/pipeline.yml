@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate Configuration
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config:
+          - examples/raspberrypi.yaml
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Free up disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          df -h
+
+      - name: Install kas
+        run: pip install kas
+
+      - name: Validate kas config and checkout layers
+        run: kas checkout ${{ matrix.config }}
+
+      - name: Parse recipes
+        run: kas shell ${{ matrix.config }} -c "bitbake -p"
