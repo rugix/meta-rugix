@@ -22,6 +22,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Create KAS directories
+        run: mkdir -p "$KAS_WORK_DIR" "$KAS_BUILD_DIR"
+
       - name: Validate kas config and checkout layers
         run: kas-container checkout ${{ matrix.config }}
 
