@@ -1,0 +1,36 @@
+fdt addr ${fdt_addr} && fdt get value bootargs /chosen bootargs
+
+test -n "${rugix_boot_spare}" || setenv rugix_boot_spare 0
+test -n "${rugix_bootpart}" || setenv rugix_bootpart 2
+
+echo "Boot Spare: " ${rugix_boot_spare}
+echo "Bootpart: " ${rugix_bootpart}
+
+if test "${rugix_boot_spare}" = "1"; then
+  if test "${rugix_bootpart}" = "3"; then
+    setenv rugix_boot_dev "mmc 0:2"
+    setenv rugix_root "/dev/mmcblk0p2"
+  else
+    setenv rugix_boot_dev "mmc 0:3"
+    setenv rugix_root "/dev/mmcblk0p3"
+  fi
+  setenv rugix_boot_spare 0
+  saveenv
+else
+  if test "${rugix_bootpart}" = "3"; then
+    setenv rugix_boot_dev "mmc 0:3"
+    setenv rugix_root "/dev/mmcblk0p3"
+  else
+    setenv rugix_boot_dev "mmc 0:2"
+    setenv rugix_root "/dev/mmcblk0p2"
+  fi
+fi
+
+echo "Bootdev: " ${rugix_boot_dev}
+
+# Initialize the UBoot environment on first boot.
+if test ! -e mmc 0:1 uboot.env; then saveenv; fi;
+
+setenv bootargs "${bootargs} root=${rugix_root} init=/usr/bin/rugix-ctrl ro"
+load ${rugix_boot_dev} ${kernel_addr_r} boot/@@KERNEL_IMAGETYPE@@
+@@KERNEL_BOOTCMD@@ ${kernel_addr_r} - ${fdt_addr}
