@@ -11,8 +11,8 @@ env:
   KAS_BUILD_DIR: ${{ github.workspace }}/build
 
 jobs:
-  validate:
-    name: Validate Configuration
+  build:
+    name: Build
     runs-on: [self-hosted, nixos, yocto]
     strategy:
       matrix:
@@ -30,3 +30,6 @@ jobs:
 
       - name: Parse recipes
         run: kas-container shell ${{ matrix.config }} -c "bitbake -p"
+
+      - name: Build
+        run: kas-container build ${{ matrix.config }}
