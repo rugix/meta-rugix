@@ -28,7 +28,9 @@ fi
 
 echo "Bootdev: " ${rugix_boot_dev}
 
+# Initialize the UBoot environment on first boot.
+if test ! -e mmc 0:1 uboot.env; then saveenv; fi;
+
 setenv bootargs "${bootargs} root=${rugix_root} init=/usr/bin/rugix-ctrl ro"
-saveenv
 load ${rugix_boot_dev} ${kernel_addr_r} boot/@@KERNEL_IMAGETYPE@@
 @@KERNEL_BOOTCMD@@ ${kernel_addr_r} - ${fdt_addr}
