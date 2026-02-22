@@ -4,23 +4,16 @@ This repository provides Yocto layers for integrating [Rugix Ctrl](https://rugix
 Rugix Ctrl **enables secure and efficient over-the-air (OTA) updates and provides robust state management capabilities** designed to streamline the development and maintenance of embedded Linux devices at scale.
 Rugix Ctrl is part of the [Rugix Project](https://rugix.org).
 
-> [!WARNING]
-> This repository is **work-in-progress and not intended for production use** at this time.
-> We appreciate any feedback you may have regarding this Yocto integration.
-> Feel free to [open an issue](https://github.com/silitics/meta-rugix/issues/new/choose).
+Rugix Ctrl is a state-of-the-art update and state management engine:
 
-Rugix Ctrl has all features you would expect from a state-of-the-art update solution and more:
+- **A/B Updates**: Atomic system updates with automatic rollback on failure.
+- **Delta Updates**: [Highly-efficient delta updates](https://rugix.org/blog/efficient-delta-updates) minimizing bandwidth.
+- **Signature Verification**: Cryptographic verification _before_ installing anything anywhere.
+- **State Management**: Flexible state management inspired by container-based architectures.
+- **Vendor-Agnostic**: Compatible with [various fleet management solutions](https://rugix.org/docs/ctrl/advanced/fleet-management) (avoids lock-in).
+- **Flexible Boot Flows**: Supports [any bootloader and boot process](https://rugix.org/docs/ctrl/advanced/boot-flows).
 
-- **Atomic A/B system updates** with popular bootloaders out of the box.
-- **Streaming updates** as well as **adaptive delta updates** out of the box.
-- Builtin **cryptographic integrity checks** _before_ installing anything anywhere.
-- Supports **any update scenario**, including **non-A/B updates and incremental updates**.
-- Supports **any bootloader and boot process** through [custom _boot flows_](https://rugix.org/docs/ctrl/advanced/boot-flows).
-- **Robust state management mechanism** inspired by container-based architectures.
-- Integrates well with [different fleet management solutions](https://rugix.org/docs/ctrl/advanced/fleet-management) (avoids vendor lock-in).
-- Provides powerful interfaces to built your own update workflow upon.
-
-Rugix Ctrl **supports or can be adapted to almost any requirements you may have** when it comes to robust and secure updates of your entire system as well as its individual components.
+Rugix Ctrl supports different update strategies (symmetric A/B, asymmetric with recovery, incremental updates) and can be adapted to almost any requirements you may have for robust and secure updates.
 
 For details, check out [Rugix Ctrl's documentation](https://rugix.org/docs/ctrl) and the [documentation on the Yocto layers](https://oss.silitics.com/rugix/docs/ctrl/advanced/yocto-integration/).
 
