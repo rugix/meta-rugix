@@ -1,5 +1,0 @@
-RUGIX_VERSION = "0.8.6"
-SRC_URI[x86_64.sha256sum] = "3e35666db58037452fc7c4b2f239c4296aca74e549d84fd756c67089b1323043"
-SRC_URI[aarch64.sha256sum] = "f42f47496740cdddc6b637059d06e28dc2413d816de729d6e89d5c12ed9fb8f8"
-
-require rugix-bundler-bin-native.inc
