@@ -15,7 +15,7 @@ Rugix Ctrl is a state-of-the-art update and state management engine:
 
 Rugix Ctrl supports different update strategies (symmetric A/B, asymmetric with recovery, incremental updates) and can be adapted to almost any requirements you may have for robust and secure updates.
 
-For details, check out [Rugix Ctrl's documentation](https://rugix.org/docs/ctrl) and the [documentation on the Yocto layers](https://oss.silitics.com/rugix/docs/ctrl/advanced/yocto-integration/).
+For details, check out [Rugix Ctrl's documentation](https://rugix.org/docs/ctrl) and the [documentation on the Yocto layers](https://rugix.org/docs/ctrl/advanced/yocto-integration/).
 
 ## Getting Started
 
@@ -34,7 +34,7 @@ Depending on your project and requirements, you may need to adapt those layers o
 
 ## ⚖️ Licensing
 
-This project is licensed under either [MIT](https://github.com/silitics/rugix/blob/main/LICENSE-MIT) or [Apache 2.0](https://github.com/silitics/rugix/blob/main/LICENSE-APACHE) at your option.
+This project is licensed under either [MIT](https://github.com/rugix/rugix/blob/main/LICENSE-MIT) or [Apache 2.0](https://github.com/rugix/rugix/blob/main/LICENSE-APACHE) at your option.
 
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in this project by you, as defined in the Apache 2.0 license, shall be dual licensed as above, without any additional terms or conditions.
 
