@@ -1,26 +1,15 @@
 DESCRIPTION = "Native version of Rugix Bundler"
-LICENSE = "CLOSED"
+LICENSE = "Apache-2.0"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-inherit native
+SRC_URI = "git://github.com/silitics/rugix.git;branch=main;protocol=https"
 
-python __anonymous() {
-    arch = d.getVar("BUILD_ARCH")
-    target = {
-        "x86_64": "x86_64-unknown-linux-musl",
-        "aarch64": "aarch64-unknown-linux-musl",
-    }.get(arch, None)
+S = "${WORKDIR}/git"
 
-    if target is None:
-        raise bb.parse.SkipRecipe(f"Unsupported build architecture: {arch}.")
-    
-    version = d.getVar('RUGIX_VERSION')
+inherit cargo native
 
-    d.setVar("SRC_URI", f"https://github.com/silitics/rugix/releases/download/v{version}/{target}.tar;downloadfilename=rugix-{version}-{arch}.tar;name={arch};subdir=rugix-binaries")
-}
-
-S = "${WORKDIR}"
-
-do_install() {
-    install -d ${D}${bindir}
-    install -m 0755 ${S}/rugix-binaries/rugix-bundler ${D}${bindir}/rugix-bundler
-}
+do_compile[network] = "1"
+CARGO_DISABLE_BITBAKE_VENDORING = "1"
+CARGO_BUILD_FLAGS:append = " --bin rugix-bundler "
+CARGO_BUILD_FLAGS:remove = "--frozen"
+CARGO_BUILD_FLAGS:append = " --config 'profile.release.strip="none"'"

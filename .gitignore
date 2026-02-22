@@ -10,3 +10,5 @@ devenv.local.yaml
 .direnv
 
 .pre-commit-config.yaml
+
+.claude
