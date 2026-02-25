@@ -17,7 +17,8 @@ jobs:
     strategy:
       matrix:
         config:
-          - examples/raspberrypi.yaml
+          - examples/raspberrypi-tryboot.yaml
+          - examples/raspberrypi-uboot.yaml
     steps:
       - name: Checkout
         uses: actions/checkout@v4
