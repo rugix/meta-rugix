@@ -26,6 +26,11 @@ RUSTFLAGS:append = " --remap-path-prefix=${TMPDIR}=/usr/src/debug/${PN}/${PV}"
 # https://doc.rust-lang.org/cargo/reference/config.html#command-line-overrides
 CARGO_BUILD_FLAGS:append = " --config 'profile.release.strip="none"'"
 
+# Inject the Rugix version from Git tags into the build environment.
+do_compile:prepend() {
+    export RUGIX_GIT_VERSION="$(git -C ${S} describe --tags --always 2>/dev/null || echo '${PV}')"
+}
+
 # remove unsupported panic mode from Cargo build
 cargo_do_compile:prepend:class-target() {
     sed -i '/panic = \"abort\"/d' ${S}/${CARGO_SRC_DIR}/Cargo.toml

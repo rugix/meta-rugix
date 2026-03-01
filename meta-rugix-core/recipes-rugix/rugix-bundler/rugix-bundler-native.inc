@@ -13,3 +13,8 @@ CARGO_DISABLE_BITBAKE_VENDORING = "1"
 CARGO_BUILD_FLAGS:append = " --bin rugix-bundler "
 CARGO_BUILD_FLAGS:remove = "--frozen"
 CARGO_BUILD_FLAGS:append = " --config 'profile.release.strip="none"'"
+
+# Inject the Rugix version from Git tags into the build environment.
+do_compile:prepend() {
+    export RUGIX_GIT_VERSION="$(git -C ${S} describe --tags --always 2>/dev/null || echo '${PV}')"
+}
