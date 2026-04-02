@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/refs/heads/master/kas/schema-kas.json
+header:
+  version: 14
+  includes:
+    - examples/include/common.yaml
+
+local_conf_header:
+  rugix-qemu-arm64-uboot: |
+    IMAGE_FSTYPES = "tar.bz2 ext4 wic wic.bmap"
+    WKS_FILE = "qemu-arm64-rugix-uboot.wks"
+    WKS_FILE_DEPENDS:append = " u-boot-boot-image"
+    EXTRA_IMAGEDEPENDS += "u-boot"
+    IMAGE_INSTALL:append = " rugix-system-conf kernel-image u-boot-default-env u-boot-fw-utils"
+
+machine: qemuarm64
+distro: poky
+target:
+  - core-image-minimal
+  - update-bundle-minimal
+
+defaults:
+  repos:
+    branch: scarthgap
+
+repos:
+  poky:
+    url: https://github.com/yoctoproject/poky.git
+    layers:
+      meta:
+      meta-poky:
+      meta-yocto-bsp:
+
+  meta-openembedded:
+    url: "https://github.com/openembedded/meta-openembedded.git"
+    layers:
+      meta-oe:
+      meta-python:
+      meta-networking:
+      meta-multimedia:
+      meta-filesystems:
+
+  meta-lts-mixins-rust:
+    url: "https://git.yoctoproject.org/meta-lts-mixins"
+    branch: scarthgap/rust
+
+  meta-lts-mixins-uboot:
+    url: "https://git.yoctoproject.org/meta-lts-mixins"
+    branch: scarthgap/u-boot
+
+  meta-rugix:
+    layers:
+      meta-rugix-core:
+      meta-rugix-qemu-arm64-uboot:

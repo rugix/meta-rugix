@@ -10,6 +10,7 @@
   packages = with pkgs; [
     kas
     podman
+    qemu
   ];
 
   env = {

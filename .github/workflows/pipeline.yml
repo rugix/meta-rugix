@@ -19,6 +19,8 @@ jobs:
         config:
           - examples/raspberrypi-tryboot.yaml
           - examples/raspberrypi-uboot.yaml
+          - examples/qemu-x86_64-grub.yaml
+          - examples/qemu-arm64-uboot.yaml
     steps:
       - name: Checkout
         uses: actions/checkout@v4

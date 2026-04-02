@@ -34,3 +34,9 @@ kas *args:
 
 build *args:
     @.venv/bin/kas build {{args}}
+
+run-qemu-x86_64 *args:
+    @scripts/run-qemu-x86_64 {{args}}
+
+run-qemu-arm64 *args:
+    @scripts/run-qemu-arm64 {{args}}
