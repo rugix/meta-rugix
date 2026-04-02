@@ -1,0 +1,11 @@
+# Rugix A/B partition layout for QEMU ARM64 with U-Boot.
+#
+# Partition 1: Boot partition (U-Boot boot script, Rugix config partition)
+# Partition 2: System A (rootfs, booted by default)
+#
+# Bootstrapping expands the table on first boot.
+
+bootloader --ptable gpt
+
+part --source rawcopy --sourceparams="file=uboot-boot.vfat" --ondisk vda --label boot --align 4096 --fixed-size 64M --part-type EBD0A0A2-B9E5-4433-87C0-68B6B72699C7
+part / --source rootfs --ondisk vda --label system-a --fstype=ext4 --align 4096 --mkfs-extraopts "-O ^has_journal"

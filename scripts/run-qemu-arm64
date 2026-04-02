@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+#
+# Run the QEMU ARM64 Rugix image with U-Boot.
+#
+# Creates a qcow2 overlay on top of the built WIC image, expanded to 16 GiB
+# so the Rugix bootstrapping process can create the required A/B system and
+# data partitions on first boot. A pflash image is created for U-Boot with
+# persistent environment storage.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+BUILD_DIR="${KAS_BUILD_DIR:-${ROOT_DIR}/build}"
+DEPLOY_DIR="${BUILD_DIR}/tmp/deploy/images/qemuarm64"
+
+WIC_IMAGE="${DEPLOY_DIR}/core-image-minimal-qemuarm64.rootfs.wic"
+UBOOT_BIN="${DEPLOY_DIR}/u-boot.bin"
+OVERLAY="${DEPLOY_DIR}/core-image-minimal-qemuarm64.overlay.qcow2"
+
+# QEMU ARM virt has two 64 MiB pflash banks. U-Boot lives in flash0; the
+# environment is stored at the start of flash1 (CONFIG_ENV_ADDR=0x4000000).
+FLASH0="${DEPLOY_DIR}/flash0.img"
+FLASH1="${DEPLOY_DIR}/flash1.img"
+FLASH_SIZE_MB=64
+
+# Disk size must be large enough for the full partition layout defined in
+# bootstrapping.toml: boot (64 MiB) + system-a (4 GiB) + system-b (4 GiB)
+# + data (remaining).
+DISK_SIZE="16G"
+
+if [ ! -f "${WIC_IMAGE}" ]; then
+    echo "Error: WIC image not found at ${WIC_IMAGE}" >&2
+    echo "Build it first with: just build examples/qemu-arm64-uboot.yaml" >&2
+    exit 1
+fi
+
+if [ ! -f "${UBOOT_BIN}" ]; then
+    echo "Error: U-Boot binary not found at ${UBOOT_BIN}" >&2
+    exit 1
+fi
+
+# Create a fresh qcow2 overlay backed by the WIC image, expanded to the
+# required disk size for bootstrapping.
+echo "Creating qcow2 overlay (${DISK_SIZE}) over WIC image..."
+qemu-img create -f qcow2 -b "${WIC_IMAGE}" -F raw "${OVERLAY}" "${DISK_SIZE}"
+
+# Create flash0 with U-Boot firmware.
+echo "Creating pflash images..."
+dd if=/dev/zero of="${FLASH0}" bs=1M count=${FLASH_SIZE_MB} status=none
+dd if="${UBOOT_BIN}" of="${FLASH0}" conv=notrunc status=none
+
+# Create empty flash1 for U-Boot environment.
+dd if=/dev/zero of="${FLASH1}" bs=1M count=${FLASH_SIZE_MB} status=none
+
+# Enable KVM acceleration if available (ARM64 host only).
+KVM_ARGS=()
+if [ "$(uname -m)" = "aarch64" ] && [ -w /dev/kvm ]; then
+    echo "KVM available, enabling hardware acceleration."
+    KVM_ARGS+=(-enable-kvm -cpu host)
+else
+    echo "KVM not available, using software emulation."
+    KVM_ARGS+=(-cpu cortex-a57)
+fi
+
+echo "Starting QEMU..."
+exec qemu-system-aarch64 \
+    -machine virt \
+    "${KVM_ARGS[@]}" \
+    -smp 4 \
+    -m 1024 \
+    -drive if=pflash,format=raw,file="${FLASH0}",readonly=on \
+    -drive if=pflash,format=raw,file="${FLASH1}" \
+    -drive if=virtio,format=qcow2,file="${OVERLAY}" \
+    -serial mon:stdio \
+    -nographic \
+    -nic user,model=virtio-net-pci,hostfwd=tcp::2222-:22 \
+    "$@"
