@@ -26,4 +26,3 @@ local_conf_header:
 
     # Rugix-specific configuration.
     DISTRO_FEATURES:append = " rugix "
-    IMAGE_INSTALL:append = " rugix-ctrl rugix-bootstrapping-conf util-linux-sfdisk e2fsprogs-mke2fs "

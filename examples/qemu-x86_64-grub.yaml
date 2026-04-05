@@ -8,7 +8,6 @@ local_conf_header:
   rugix-qemu-x86_64-grub: |
     IMAGE_FSTYPES = "tar.bz2 ext4 wic wic.bmap"
     EXTRA_IMAGEDEPENDS += "ovmf"
-    IMAGE_INSTALL:append = " rugix-system-conf kernel-image"
 
 machine: qemux86-64
 distro: poky

@@ -8,7 +8,6 @@ local_conf_header:
   rugix-qemu-arm64-uboot: |
     IMAGE_FSTYPES = "tar.bz2 ext4 wic wic.bmap"
     EXTRA_IMAGEDEPENDS += "u-boot"
-    IMAGE_INSTALL:append = " rugix-system-conf kernel-image u-boot-default-env u-boot-fw-utils"
 
 machine: qemuarm64
 distro: poky

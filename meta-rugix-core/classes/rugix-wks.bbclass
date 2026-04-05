@@ -16,4 +16,5 @@ python() {
     wks_depends = d.getVar('RUGIX_WKS_FILE_DEPENDS')
     if wks_depends:
         d.appendVar('WKS_FILE_DEPENDS', ' ' + wks_depends)
+    d.appendVar('IMAGE_INSTALL', ' packagegroup-rugix-bsp')
 }
