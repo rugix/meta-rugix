@@ -15,4 +15,5 @@ devenv.local.yaml
 
 test-outputs
 
+.pytest_cache
 __pycache__
