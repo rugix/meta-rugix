@@ -40,3 +40,17 @@ run-qemu-x86_64 *args:
 
 run-qemu-arm64 *args:
     @scripts/run-qemu-arm64 {{args}}
+
+_uv_run := "uv run --with-editable ./deps/rugix-testkit --with pytest --with pytest-timeout"
+
+[positional-arguments]
+test *args:
+    {{ _uv_run }} pytest tests/ "$@"
+
+[positional-arguments]
+test-x86_64 *args:
+    {{ _uv_run }} pytest tests/ -k "qemux86-64" "$@"
+
+[positional-arguments]
+test-arm64 *args:
+    {{ _uv_run }} pytest tests/ -k "qemuarm64" "$@"

@@ -12,3 +12,7 @@ devenv.local.yaml
 .pre-commit-config.yaml
 
 .claude
+
+test-outputs
+
+__pycache__
