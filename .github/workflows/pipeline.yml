@@ -26,6 +26,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Create KAS directories
         run: mkdir -p "$KAS_WORK_DIR" "$KAS_BUILD_DIR"
