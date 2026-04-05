@@ -31,8 +31,8 @@ We provide [kas](https://github.com/siemens/kas)-based [examples](./examples/) t
 The layer [`meta-rugix-core`](./meta-rugix-core/) provides everything required for installing Rugix Ctrl and building Rugix-compatible update bundles.
 In addition the following board-specific layers are provided:
 
-- [`meta-rugix-rpi-tryboot`](./meta-rugix-rpi-tryboot/): BSP layer for Raspberry Pi with [`tryboot`](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#fail-safe-os-updates-tryboot) support (official A/B update mechanism of Raspberry Pi). This requires Raspberry Pi 4 (CM4, Raspberry Pi 400) or newer.
-- [`meta-rugix-rpi-uboot`](./meta-rugix-rpi-uboot/): BSP layer for Raspberry Pi with U-Boot-based A/B updates. This is meant as a reference implementation for U-Boot. If you have a newer Raspberry Pi model, use the `tryboot` integration.
+- [`meta-rugix-rpi-tryboot`](./meta-rugix-rpi-tryboot/): BSP layer for Raspberry Pi with [`tryboot`](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#fail-safe-os-updates-tryboot)-based A/B updates (official A/B update mechanism of Raspberry Pi). This requires Raspberry Pi 4 (CM4, Raspberry Pi 400) or newer.
+- [`meta-rugix-rpi-uboot`](./meta-rugix-rpi-uboot/): BSP layer for Raspberry Pi with U-Boot-based A/B updates. This is meant as a reference implementation. For actual field deployments, always use the `tryboot` integration.
 - [`meta-rugix-qemu-arm64-uboot`](./meta-rugix-qemu-arm64-uboot/): BSP layer for QEMU ARM64 with U-Boot-based A/B updates.
 - [`meta-rugix-qemu-x86_64-grub`](./meta-rugix-qemu-x86_64-grub/): BSP layer for QEMU x86_64 with GRUB EFI-based A/B updates.
 
