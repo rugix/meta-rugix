@@ -1,0 +1,3 @@
+[submodule "deps/rugix-testkit"]
+	path = deps/rugix-testkit
+	url = ../rugix-testkit

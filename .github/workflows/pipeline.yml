@@ -16,19 +16,23 @@ jobs:
     runs-on: [self-hosted, nixos, yocto]
     strategy:
       matrix:
-        config:
-          - examples/raspberrypi-tryboot.yaml
-          - examples/raspberrypi-uboot.yaml
-          - examples/qemu-x86_64-grub.yaml
-          - examples/qemu-arm64-uboot.yaml
+        include:
+          - config: examples/raspberrypi-tryboot.yaml
+          - config: examples/raspberrypi-uboot.yaml
+          - config: examples/qemu-x86_64-grub.yaml
+            test_platform: qemux86-64
+          - config: examples/qemu-arm64-uboot.yaml
+            test_platform: qemuarm64
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Create KAS directories
         run: mkdir -p "$KAS_WORK_DIR" "$KAS_BUILD_DIR"
 
-      - name: Validate kas config and checkout layers
+      - name: Validate KAS config and checkout layers
         run: kas-container checkout ${{ matrix.config }}
 
       - name: Parse recipes
@@ -36,3 +40,14 @@ jobs:
 
       - name: Build
         run: kas-container build ${{ matrix.config }}
+
+      - name: Test
+        if: matrix.test_platform
+        run: just test -k "${{ matrix.test_platform }}"
+
+      - name: Upload test outputs
+        if: failure() && matrix.test_platform
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-outputs-${{ matrix.test_platform }}
+          path: test-outputs/

@@ -11,6 +11,8 @@
     kas
     podman
     qemu
+    uv
+    just
   ];
 
   env = {

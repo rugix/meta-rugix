@@ -12,3 +12,8 @@ devenv.local.yaml
 .pre-commit-config.yaml
 
 .claude
+
+test-outputs
+
+.pytest_cache
+__pycache__
