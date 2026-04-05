@@ -39,7 +39,7 @@ In addition the following board-specific layers are provided:
 The board-specific layers serve as **examples** for how to integrate Rugix Ctrl with specific boards and boot flows.
 Depending on your project and requirements, you may need to adapt those layers or write your own.
 
-## ⚖️ Licensing
+## Licensing
 
 This project is licensed under either [MIT](https://github.com/rugix/rugix/blob/main/LICENSE-MIT) or [Apache 2.0](https://github.com/rugix/rugix/blob/main/LICENSE-APACHE) at your option.
 
