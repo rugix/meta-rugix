@@ -31,6 +31,8 @@ do_deploy() {
     touch ${FATSOURCEDIR}/.rugix/bootstrap
 
     # Initialize GRUB environment files with default boot state.
+    #
+    # Variable names use the `rugpi_` prefix for backward compatibility.
     grub-editenv ${FATSOURCEDIR}/rugpi/primary.grubenv create
     grub-editenv ${FATSOURCEDIR}/rugpi/primary.grubenv set rugpi_bootpart=2
     grub-editenv ${FATSOURCEDIR}/rugpi/boot_spare.grubenv create
