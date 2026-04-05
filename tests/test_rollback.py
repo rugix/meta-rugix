@@ -1,4 +1,4 @@
-"""Tests for rollback behaviour after failed or uncommitted updates."""
+"""Tests for rollback behavior after failed or uncommitted updates."""
 
 import pytest
 
