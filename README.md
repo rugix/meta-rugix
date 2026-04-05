@@ -18,6 +18,10 @@ Rugix Ctrl supports different update strategies (symmetric A/B, asymmetric with 
 
 For details, check out [Rugix Ctrl's documentation](https://rugix.org/docs/ctrl) and the [documentation on the Yocto layers](https://rugix.org/docs/ctrl/advanced/yocto-integration/).
 
+## Supported Yocto Versions
+
+We only support Yocto LTS releases and maintain a dedicated branch for each (e.g., `scarthgap`, `kirkstone`). The `main` branch tracks the latest supported LTS release. Non-LTS Yocto releases are not officially supported.
+
 ## Getting Started
 
 We provide [kas](https://github.com/siemens/kas)-based [examples](./examples/) to help you get started quickly.
@@ -27,10 +31,12 @@ We provide [kas](https://github.com/siemens/kas)-based [examples](./examples/) t
 The layer [`meta-rugix-core`](./meta-rugix-core/) provides everything required for installing Rugix Ctrl and building Rugix-compatible update bundles.
 In addition the following board-specific layers are provided:
 
-- [`meta-rugix-rpi-tryboot`](./meta-rugix-rpi-tryboot/): BSP layer for building Raspberry Pi images with [`tryboot`](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#fail-safe-os-updates-tryboot) support (official A/B update mechanism of Raspberry Pi). This requires a Raspberry Pi 4 (CM4, Raspberry Pi 400) or newer.
-- [`meta-rugix-rpi-uboot`](./meta-rugix-rpi-uboot/): BSP layer for building Raspberry Pi images with U-Boot-based A/B updates. This is primarily meant as a reference implementation for U-Boot. If you have a newer Raspberry Pi model, use the `tryboot` integration.
+- [`meta-rugix-rpi-tryboot`](./meta-rugix-rpi-tryboot/): BSP layer for Raspberry Pi with [`tryboot`](https://www.raspberrypi.com/documentation/computers/raspberry-pi A/B updates.html#fail-safe-os-updates-tryboot) (official A/B update mechanism of Raspberry Pi). Requires a Raspberry Pi 4 (CM4, Raspberry Pi 400) or newer.
+- [`meta-rugix-rpi-uboot`](./meta-rugix-rpi-uboot/): BSP layer for Raspberry Pi with U-Boot-based A/B updates. This is primarily meant as a reference implementation for U-Boot. If you have a newer Raspberry Pi model, use the `tryboot` integration.
+- [`meta-rugix-qemu-arm64-uboot`](./meta-rugix-qemu-arm64-uboot/): BSP layer for QEMU ARM64 with U-Boot-based A/B updates.
+- [`meta-rugix-qemu-x86_64-grub`](./meta-rugix-qemu-x86_64-grub/): BSP layer for QEMU x86_64 with GRUB EFI-based A/B updates.
 
-The board-specific layers serve as **examples** for how to integrate Rugix Ctrl with specific boards.
+The board-specific layers serve as **examples** for how to integrate Rugix Ctrl with specific boards and boot flows.
 Depending on your project and requirements, you may need to adapt those layers or write your own.
 
 ## ⚖️ Licensing
