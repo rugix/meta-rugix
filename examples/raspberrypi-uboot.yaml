@@ -15,7 +15,6 @@ local_conf_header:
     RPI_USE_U_BOOT = "1"
     IMAGE_FSTYPES = " tar.bz2 ext4 wic wic.bmap"
     SDIMG_ROOTFS_TYPE = "ext4"
-    WKS_FILE = "sdimage-rugix-rpi-uboot.wks.in"
     IMAGE_INSTALL:append = " rugix-system-conf"
 
 machine: raspberrypi-armv8

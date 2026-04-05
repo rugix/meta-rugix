@@ -14,7 +14,6 @@ local_conf_header:
   rugix-raspberrypi: |
     IMAGE_FSTYPES = " tar.bz2 ext4 wic wic.bmap"
     SDIMG_ROOTFS_TYPE = "ext4"
-    WKS_FILE = "sdimage-rugix-rpi-tryboot.wks.in"
 
 machine: raspberrypi-armv8
 distro: poky

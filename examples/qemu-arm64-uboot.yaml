@@ -7,8 +7,6 @@ header:
 local_conf_header:
   rugix-qemu-arm64-uboot: |
     IMAGE_FSTYPES = "tar.bz2 ext4 wic wic.bmap"
-    WKS_FILE = "qemu-arm64-rugix-uboot.wks"
-    WKS_FILE_DEPENDS:append = " u-boot-boot-image"
     EXTRA_IMAGEDEPENDS += "u-boot"
     IMAGE_INSTALL:append = " rugix-system-conf kernel-image u-boot-default-env u-boot-fw-utils"
 

@@ -7,9 +7,7 @@ header:
 local_conf_header:
   rugix-qemu-x86_64-grub: |
     IMAGE_FSTYPES = "tar.bz2 ext4 wic wic.bmap"
-    WKS_FILE = "qemu-x86_64-rugix-grub-efi.wks"
     EXTRA_IMAGEDEPENDS += "ovmf"
-    WKS_FILE_DEPENDS:append = " efi-boot-image"
     IMAGE_INSTALL:append = " rugix-system-conf kernel-image"
 
 machine: qemux86-64
