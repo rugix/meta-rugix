@@ -102,7 +102,7 @@ def bundle_url(platform: str, http_server: HTTPServer) -> str:
     port = http_server.server_port
     return (
         f"http://10.0.2.2:{port}/{platform}"
-        f"/update-bundle-minimal-{platform}.rugixb"
+        f"/core-image-minimal-{platform}.rugixb"
     )
 
 
