@@ -3,9 +3,6 @@
 # Produces a .rugixb update bundle from WIC image partitions. BSP sublayers
 # set RUGIX_SLOTS in their layer.conf to map slot names to WIC partition
 # numbers (e.g., "system:2" or "boot:2 system:4").
-#
-# The rugixb type is automatically added to IMAGE_FSTYPES when the rugix
-# distro feature is enabled and RUGIX_SLOTS is non-empty.
 
 IMAGE_TYPES += "rugixb"
 IMAGE_TYPEDEP:rugixb = "wic"

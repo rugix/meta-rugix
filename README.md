@@ -41,7 +41,7 @@ Depending on your project and requirements, you may need to adapt those layers o
 
 ## Rugix BSP Layers
 
-A Rugix BSP layer configures the image build for a specific target, defining how the disk is partitioned, how the system boots, what packages are required, and what build artifacts are produced. All integration is driven by the `rugix` distro feature. When enabled, the core classes apply the BSP configuration to every image automatically.
+A Rugix BSP layer configures the image build for a specific target, defining how the disk is partitioned, how the system boots, and what additional packages are required. All integration is driven by the `rugix` distro feature. When enabled, the core classes apply the BSP configuration to every image automatically.
 
 A BSP layer typically provides:
 
@@ -51,7 +51,7 @@ A BSP layer typically provides:
 - **`packagegroup-rugix-bsp`** with additional required packages (bootstrapping tools, system configuration, etc.).
 - **Bootloader recipes** for target-specific boot artifacts (e.g., GRUB EFI image, U-Boot boot script).
 
-Not all of these are required. For instance, a BSP that uses an external bootstrapping mechanism can omit `bootstrapping.toml` and the associated packages.
+Not all of these are required. For instance, a BSP that uses an external bootstrapping mechanism can omit the bootstrapping configuration (`bootstrapping.toml`) and the associated packages.
 
 **How it works.** The BSP layer's `layer.conf` registers itself with the core infrastructure:
 
