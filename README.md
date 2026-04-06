@@ -39,6 +39,40 @@ In addition the following board-specific layers are provided:
 The board-specific layers serve as **examples** for how to integrate Rugix Ctrl with specific boards and boot flows.
 Depending on your project and requirements, you may need to adapt those layers or write your own.
 
+### Rugix BSP Layers
+
+A Rugix BSP layer configures the image build for a specific target, defining how the disk is partitioned, how the system boots, what packages are required, and what build artifacts are produced. All integration is driven by the `rugix` distro feature. When enabled, the core bbclasses read the BSP configuration and apply it to every image build automatically.
+
+A BSP layer typically provides:
+
+- **WKS file** for the disk/partition layout.
+- **Boot configuration** via `system.toml` (boot flow, slot-to-partition mapping) and `bootstrapping.toml` (first-boot partition expansion).
+- **Slot mapping** defining which WIC partitions are update slots (`RUGIX_SLOTS`).
+- **`packagegroup-rugix-bsp`** with the target packages (bootstrapping tools, system configuration, etc.).
+- **Bootloader recipes** for target-specific boot artifacts (e.g., GRUB EFI image, U-Boot boot script).
+
+Not all of these are required. A BSP that does not use A/B updates can omit `RUGIX_SLOTS` and the slot-related configuration, and no update bundles will be produced. Similarly, a BSP that uses an external bootstrapping mechanism can omit `bootstrapping.toml` and the associated packages.
+
+**How it works.** The BSP layer's `layer.conf` registers itself with the core infrastructure:
+
+```bitbake
+IMAGE_CLASSES += "rugix-bsp"
+RUGIX_WKS_FILE ?= "my-target.wks"
+RUGIX_WKS_FILE_DEPENDS ?= "efi-boot-image"
+RUGIX_SLOTS ?= "system:2"
+```
+
+| Variable                 | Purpose                                                                                                                                                                                                                                                                                         |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `RUGIX_WKS_FILE`         | WKS file for the disk layout. Set to the BSP's WKS file. Override in `local.conf` to use a custom layout.                                                                                                                                                                                       |
+| `RUGIX_WKS_FILE_DEPENDS` | Build-time dependencies of the WKS file (e.g., a recipe that produces a boot partition image).                                                                                                                                                                                                  |
+| `RUGIX_SLOTS`            | Maps slot names to WIC partition numbers (e.g., `"system:2"` or `"boot:2 system:4"`). When non-empty, the `rugixb` image type is automatically added to `IMAGE_FSTYPES` and a `.rugixb` update bundle is produced alongside the `.wic` image. Leave empty to disable automatic bundle creation. |
+
+When `rugix` is in `DISTRO_FEATURES`, the core layer provides two bbclasses via `IMAGE_CLASSES`:
+
+- **`rugix-bsp`** (added by BSP sublayers) sets `WKS_FILE` from `RUGIX_WKS_FILE` and appends `packagegroup-rugix-bsp` to `IMAGE_INSTALL`.
+- **`rugix-image-rugixb`** (added by `meta-rugix-core`) appends `packagegroup-rugix` (`rugix-ctrl`) to `IMAGE_INSTALL` and registers `rugixb` as an image type that produces `.rugixb` update bundles from WIC partitions.
+
 ## Licensing
 
 This project is licensed under either [MIT](https://github.com/rugix/rugix/blob/main/LICENSE-MIT) or [Apache 2.0](https://github.com/rugix/rugix/blob/main/LICENSE-APACHE) at your option.

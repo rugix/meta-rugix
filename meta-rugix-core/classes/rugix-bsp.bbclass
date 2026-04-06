@@ -1,7 +1,9 @@
-# Configure WKS_FILE when the rugix distro feature is enabled.
+# Rugix BSP integration for image recipes.
 #
-# BSP sublayers set RUGIX_WKS_FILE and RUGIX_WKS_FILE_DEPENDS in their
-# layer.conf. Override RUGIX_WKS_FILE in local.conf to use a custom WKS file.
+# BSP sublayers add this class to IMAGE_CLASSES and set RUGIX_WKS_FILE,
+# RUGIX_WKS_FILE_DEPENDS, and RUGIX_SLOTS in their layer.conf.
+#
+# Override RUGIX_WKS_FILE in local.conf to use a custom WKS file.
 
 RUGIX_WKS_FILE ??= ""
 RUGIX_WKS_FILE_DEPENDS ??= ""
