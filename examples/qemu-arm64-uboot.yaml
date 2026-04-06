@@ -6,17 +6,14 @@ header:
 
 local_conf_header:
   rugix-qemu-arm64-uboot: |
-    IMAGE_FSTYPES = "tar.bz2 ext4 wic wic.bmap"
-    WKS_FILE = "qemu-arm64-rugix-uboot.wks"
-    WKS_FILE_DEPENDS:append = " u-boot-boot-image"
+    IMAGE_FSTYPES = "tar.bz2 wic wic.bmap rugixb"
+    # Build U-Boot firmware for QEMU pflash.
     EXTRA_IMAGEDEPENDS += "u-boot"
-    IMAGE_INSTALL:append = " rugix-system-conf kernel-image u-boot-default-env u-boot-fw-utils"
 
 machine: qemuarm64
 distro: poky
 target:
   - core-image-minimal
-  - update-bundle-minimal
 
 defaults:
   repos:
