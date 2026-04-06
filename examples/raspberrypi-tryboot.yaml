@@ -13,6 +13,8 @@ local_conf_header:
 
   rugix-rpi-tryboot: |
     IMAGE_FSTYPES = "tar.bz2 wic wic.bmap rugixb"
+    # Override the A/B system partition size (default: 4GiB).
+    # RUGIX_SYSTEM_SIZE = "4GiB"
 
 machine: raspberrypi-armv8
 distro: poky
