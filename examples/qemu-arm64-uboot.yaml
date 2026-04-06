@@ -7,6 +7,8 @@ header:
 local_conf_header:
   rugix-qemu-arm64-uboot: |
     IMAGE_FSTYPES = "tar.bz2 wic wic.bmap rugixb"
+    # Override the A/B system partition size (default: 4GiB).
+    # RUGIX_SYSTEM_SIZE = "4GiB"
     # Build U-Boot firmware for QEMU pflash.
     EXTRA_IMAGEDEPENDS += "u-boot"
 
