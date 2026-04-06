@@ -61,7 +61,7 @@ compression = { type = "xz", level = 9 }
 deduplication = true
 SLOTEOF
 
-        payload_idx=$((payload_idx + 1))
+        payload_idx=$(expr ${payload_idx} + 1)
     done
 
     if [ "${payload_idx}" -eq 1 ]; then
@@ -75,7 +75,4 @@ python() {
     if not bb.utils.contains('DISTRO_FEATURES', 'rugix', True, False, d):
         return
     d.appendVar('IMAGE_INSTALL', ' packagegroup-rugix')
-    if not d.getVar('RUGIX_SLOTS').strip():
-        return
-    d.appendVar('IMAGE_FSTYPES', ' rugixb')
 }

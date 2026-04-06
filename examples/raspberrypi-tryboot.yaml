@@ -12,7 +12,7 @@ local_conf_header:
     LICENSE_FLAGS_ACCEPTED = "synaptics-killswitch"
 
   rugix-rpi-tryboot: |
-    IMAGE_FSTYPES = "tar.bz2 wic wic.bmap"
+    IMAGE_FSTYPES = "tar.bz2 wic wic.bmap rugixb"
 
 machine: raspberrypi-armv8
 distro: poky

@@ -6,7 +6,7 @@ header:
 
 local_conf_header:
   rugix-qemu-arm64-uboot: |
-    IMAGE_FSTYPES = "tar.bz2 wic wic.bmap"
+    IMAGE_FSTYPES = "tar.bz2 wic wic.bmap rugixb"
     # Build U-Boot firmware for QEMU pflash.
     EXTRA_IMAGEDEPENDS += "u-boot"
 

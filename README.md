@@ -64,7 +64,7 @@ RUGIX_SLOTS ?= "system:2"
 
 - **`RUGIX_WKS_FILE`** sets the WKS file for the disk layout. Override in `local.conf` to use a custom layout.
 - **`RUGIX_WKS_FILE_DEPENDS`** declares build-time dependencies of the WKS file.
-- **`RUGIX_SLOTS`** maps slot names to WIC partition numbers (e.g., `"system:2"` or `"boot:2 system:4"`). When non-empty, the `rugixb` image type is automatically added to `IMAGE_FSTYPES` and a `.rugixb` update bundle is produced alongside the `.wic` image. Leave empty to disable automatic bundle creation.
+- **`RUGIX_SLOTS`** maps slot names to WIC partition numbers (e.g., `"system:2"` or `"boot:2 system:4"`).
 
 **Creating a BSP layer.** To create a Rugix BSP layer for a new board, start from one of the provided BSP layers and adapt it. The `layer.conf` must depend on `meta-rugix-core`, add `rugix-bsp` to `IMAGE_CLASSES`, and set the BSP variables. See the [Rugix documentation](https://rugix.org/docs/ctrl/advanced/boot-flows) for the available boot flows and configuration options.
 

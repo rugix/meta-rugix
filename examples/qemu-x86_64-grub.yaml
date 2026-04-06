@@ -6,7 +6,7 @@ header:
 
 local_conf_header:
   rugix-qemu-x86_64-grub: |
-    IMAGE_FSTYPES = "tar.bz2 wic wic.bmap"
+    IMAGE_FSTYPES = "tar.bz2 wic wic.bmap rugixb"
     # Build OVMF firmware for QEMU pflash.
     EXTRA_IMAGEDEPENDS += "ovmf"
 
