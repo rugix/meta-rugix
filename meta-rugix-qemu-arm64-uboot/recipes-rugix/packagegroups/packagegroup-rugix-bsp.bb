@@ -1,5 +1,6 @@
 SUMMARY = "Rugix BSP packages for QEMU ARM64 with U-Boot."
 inherit packagegroup
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS:${PN} = "\
     rugix-bootstrapping-conf \

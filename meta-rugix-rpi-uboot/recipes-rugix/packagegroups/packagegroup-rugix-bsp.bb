@@ -1,5 +1,6 @@
 SUMMARY = "Rugix BSP packages for Raspberry Pi with U-Boot."
 inherit packagegroup
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS:${PN} = "\
     rugix-bootstrapping-conf \

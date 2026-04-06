@@ -1,5 +1,6 @@
 SUMMARY = "Rugix BSP packages for Raspberry Pi with Tryboot."
 inherit packagegroup
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS:${PN} = "\
     rugix-bootstrapping-conf \
