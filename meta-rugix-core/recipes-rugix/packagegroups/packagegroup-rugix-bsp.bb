@@ -1,4 +1,4 @@
-SUMMARY = "Rugix BSP packages for Raspberry Pi with Tryboot."
+SUMMARY = "Rugix BSP packages."
 inherit packagegroup
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

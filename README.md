@@ -56,7 +56,6 @@ Not all of these are required. For instance, a BSP that uses an external bootstr
 **How it works.** The BSP layer's `layer.conf` registers itself with the core infrastructure:
 
 ```bitbake
-IMAGE_CLASSES += "rugix-bsp"
 RUGIX_WKS_FILE ?= "my-target.wks"
 RUGIX_WKS_FILE_DEPENDS ?= "efi-boot-image"
 RUGIX_SLOTS ?= "system:2"
