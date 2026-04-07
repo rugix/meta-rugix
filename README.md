@@ -67,6 +67,11 @@ RUGIX_SLOTS ?= "system:2"
 
 **Creating a BSP layer.** To create a Rugix BSP layer for a new board, start from one of the provided BSP layers and adapt it. The `layer.conf` must depend on `meta-rugix-core`, add `rugix-bsp` to `IMAGE_CLASSES`, and set the BSP variables. See the [Rugix documentation](https://rugix.org/docs/ctrl/advanced/boot-flows) for the available boot flows and configuration options.
 
+## Community Showcase
+
+- [Sulka](https://codeberg.org/AltidSec/meta-sulka-distro) is a Yocto Linux distribution with a strong focus on security hardening. Sulka comes with an official Rugix integration.
+- [thin-edge.io](https://github.com/thin-edge) is a lightweight edge agent for IoT devices. It's [`meta-tedge`](https://github.com/thin-edge/meta-tedge) layers come with an official Rugix integration.
+
 ## Licensing
 
 This project is licensed under either [MIT](https://github.com/rugix/rugix/blob/main/LICENSE-MIT) or [Apache 2.0](https://github.com/rugix/rugix/blob/main/LICENSE-APACHE) at your option.
