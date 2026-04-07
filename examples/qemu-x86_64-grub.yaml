@@ -5,7 +5,7 @@ header:
     - examples/include/common.yaml
 
 local_conf_header:
-  rugix-qemu-x86_64-grub: |
+  image-conf: |
     IMAGE_FSTYPES = "tar.bz2 wic wic.bmap rugixb"
     # Override the A/B system partition size (default: 4GiB).
     # RUGIX_SYSTEM_SIZE = "4GiB"

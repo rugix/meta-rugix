@@ -11,7 +11,7 @@ local_conf_header:
     ENABLE_UART = "1"
     LICENSE_FLAGS_ACCEPTED = "synaptics-killswitch"
 
-  rugix-rpi-tryboot: |
+  image-conf: |
     IMAGE_FSTYPES = "tar.bz2 wic wic.bmap rugixb"
     # Override the A/B system partition size (default: 4GiB).
     # RUGIX_SYSTEM_SIZE = "4GiB"
