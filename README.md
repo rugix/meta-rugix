@@ -69,8 +69,8 @@ RUGIX_SLOTS ?= "system:2"
 
 ## Community Showcase
 
-- [Sulka](https://codeberg.org/AltidSec/meta-sulka-distro) is a Yocto Linux distribution with a strong focus on security hardening. Sulka comes with an official Rugix integration.
-- [thin-edge.io](https://github.com/thin-edge) is a lightweight edge agent for IoT devices. It's [`meta-tedge`](https://github.com/thin-edge/meta-tedge) layers come with an official Rugix integration.
+- [Sulka](https://codeberg.org/AltidSec/meta-sulka-distro) is a Yocto Linux distribution with a strong focus on security hardening. Sulka comes with an official Rugix integration using Rugix Ctrl for secure, atomic OTA updates.
+- [thin-edge.io](https://github.com/thin-edge) is a lightweight edge agent for IoT devices. Its [`meta-tedge`](https://github.com/thin-edge/meta-tedge) layers come with an official Rugix integration, enabling seamless system updates through the cloud.
 
 ## Licensing
 
