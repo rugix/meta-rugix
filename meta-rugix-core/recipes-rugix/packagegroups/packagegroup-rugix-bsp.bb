@@ -1,6 +1,8 @@
 SUMMARY = "Rugix BSP packages."
-inherit packagegroup
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+inherit packagegroup
 
 RDEPENDS:${PN} = "\
     rugix-bootstrapping-conf \
