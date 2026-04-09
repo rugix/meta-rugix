@@ -68,7 +68,7 @@ IMAGE_INSTALL:append:my-machine = " packagegroup-rugix-bsp"
 
 ## Community Showcase
 
-- [Nexigon](https://github.com/nexigon) is a device management solution. Its [`meta-nexigon`](https://github.com/nexigon/meta-nexigon) layers come with an official Rugix integration, enabling seamless system updates through the cloud.
+- [Nexigon](https://github.com/nexigon) is a device management and remote access solution. Its [`meta-nexigon`](https://github.com/nexigon/meta-nexigon) layers come with an official Rugix integration, enabling seamless system updates through the cloud.
 - [Sulka](https://codeberg.org/AltidSec/meta-sulka-distro) is a Yocto Linux distribution with a strong focus on security hardening. Sulka comes with an official Rugix integration using Rugix Ctrl for secure, atomic OTA updates.
 - [thin-edge.io](https://github.com/thin-edge) is a lightweight edge agent for IoT devices. Its [`meta-tedge`](https://github.com/thin-edge/meta-tedge) layers come with an official Rugix integration, enabling seamless system updates through the cloud.
 
