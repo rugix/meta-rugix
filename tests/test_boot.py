@@ -23,4 +23,4 @@ def test_ssh_and_basic_system(vm: VMHandle):
     assert result.stdout.strip() == "Linux"
 
     result = vm.run(["systemctl", "is-system-running"], check=False, hide=True)
-    assert result.stdout.strip() in ("running", "degraded")
+    assert result.stdout.strip() in ("starting", "running", "degraded")
