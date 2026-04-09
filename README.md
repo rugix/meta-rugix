@@ -41,9 +41,7 @@ Depending on your project and requirements, you may need to adapt those layers o
 
 ## Rugix BSP Layers
 
-A Rugix BSP layer configures the image build for a specific target, defining how the disk is partitioned, how the system boots, and what additional packages are required.
-
-A BSP layer typically provides:
+A Rugix BSP layer configures the image build for a specific target, defining how the disk is partitioned, how the system boots, and what additional packages are required. A BSP layer typically provides:
 
 - **WKS file** for the disk/partition layout.
 - **Rugix configuration** via `system.toml` (boot flow, slots) and `bootstrapping.toml` (first-boot bootstrapping).
