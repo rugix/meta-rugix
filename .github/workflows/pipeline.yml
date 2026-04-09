@@ -18,10 +18,14 @@ jobs:
       matrix:
         include:
           - config: examples/raspberrypi-tryboot.yaml
+            artifact: raspberrypi-tryboot
           - config: examples/raspberrypi-uboot.yaml
+            artifact: raspberrypi-uboot
           - config: examples/qemu-x86_64-grub.yaml
+            artifact: qemu-x86_64-grub
             test_platform: qemux86-64
           - config: examples/qemu-arm64-uboot.yaml
+            artifact: qemu-arm64-uboot
             test_platform: qemuarm64
     steps:
       - name: Checkout
@@ -41,13 +45,22 @@ jobs:
       - name: Build
         run: kas-container build ${{ matrix.config }}
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.artifact }}
+          path: |
+            build/tmp/deploy/images/**/*.rootfs.wic
+            build/tmp/deploy/images/**/*.rootfs.rugixb
+            build/tmp/deploy/images/**/*.rootfs.rugixb.hash
+
       - name: Test
         if: matrix.test_platform
         run: just test -k "${{ matrix.test_platform }}"
 
       - name: Upload test outputs
-        if: failure() && matrix.test_platform
-        uses: actions/upload-artifact@v4
+        if: matrix.test_platform && !cancelled()
+        uses: actions/upload-artifact@v7
         with:
           name: test-outputs-${{ matrix.test_platform }}
           path: test-outputs/
