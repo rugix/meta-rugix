@@ -16,8 +16,11 @@ CARGO_BUILD_FLAGS:append = " --bin rugix-ctrl "
 # In consequence it prevents network access that we need to load source for x509-parser library.
 CARGO_BUILD_FLAGS:remove = "--frozen"
 
-# Remap build paths in debug symbols to avoid QA warnings about TMPDIR references.
+# rust-common.bbclass already remaps WORKDIR via RUST_DEBUG_REMAP, and this
+# broadens it to TMPDIR (covers staging dirs). Paths from C code in Rust deps
+# may still leak since --remap-path-prefix only affects rustc, not cc.
 RUSTFLAGS:append = " --remap-path-prefix=${TMPDIR}=/usr/src/debug/${PN}/${PV}"
+INSANE_SKIP:${PN}-dbg += "buildpaths"
 
 # Yocto has its own stripping mechanism, so it raises an error if binaries produced by `cargo build` are already stripped.
 # To prevent this, override `profile.release.strip` in Cargo.toml to "none".

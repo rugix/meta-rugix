@@ -41,7 +41,7 @@ Depending on your project and requirements, you may need to adapt those layers o
 
 ## Rugix BSP Layers
 
-A Rugix BSP layer configures the image build for a specific target, defining how the disk is partitioned, how the system boots, and what additional packages are required. All integration is driven by the `rugix` distro feature. When enabled, the core classes apply the BSP configuration to every image automatically.
+A Rugix BSP layer configures the image build for a specific target, defining how the disk is partitioned, how the system boots, and what additional packages are required.
 
 A BSP layer typically provides:
 
@@ -53,19 +53,20 @@ A BSP layer typically provides:
 
 Not all of these are required. For instance, a BSP that uses an external bootstrapping mechanism can omit the bootstrapping configuration (`bootstrapping.toml`) and the associated packages.
 
-**How it works.** The BSP layer's `layer.conf` registers itself with the core infrastructure:
+**How it works.** The BSP layer's `layer.conf` sets standard Yocto variables with machine overrides:
 
 ```bitbake
-RUGIX_WKS_FILE ?= "my-target.wks"
-RUGIX_WKS_FILE_DEPENDS ?= "efi-boot-image"
-RUGIX_SLOTS ?= "system:2"
+WKS_FILE:my-machine ?= "my-target.wks"
+WKS_FILE_DEPENDS:append:my-machine = " efi-boot-image"
+RUGIX_SLOTS:my-machine ?= "system:2"
+IMAGE_INSTALL:append:my-machine = " packagegroup-rugix-bsp"
 ```
 
-- **`RUGIX_WKS_FILE`** sets the WKS file for the disk layout. Override in `local.conf` to use a custom layout.
-- **`RUGIX_WKS_FILE_DEPENDS`** declares build-time dependencies of the WKS file.
+- **`WKS_FILE`** sets the WKS file for the disk layout. Override in `local.conf` to use a custom layout.
+- **`WKS_FILE_DEPENDS`** declares build-time dependencies of the WKS file.
 - **`RUGIX_SLOTS`** maps slot names to WIC partition numbers (e.g., `"system:2"` or `"boot:2 system:4"`).
 
-**Creating a BSP layer.** To create a Rugix BSP layer for a new board, start from one of the provided BSP layers and adapt it. The `layer.conf` must depend on `meta-rugix-core`, add `rugix-bsp` to `IMAGE_CLASSES`, and set the BSP variables. See the [Rugix documentation](https://rugix.org/docs/ctrl/advanced/boot-flows) for the available boot flows and configuration options.
+**Creating a BSP layer.** To create a Rugix BSP layer for a new board, start from one of the provided BSP layers and adapt it. The `layer.conf` must depend on `meta-rugix-core` and set the BSP variables. See the [Rugix documentation](https://rugix.org/docs/ctrl/advanced/boot-flows) for the available boot flows and configuration options.
 
 ## Community Showcase
 

@@ -31,7 +31,6 @@ python __anonymous() {
         d.appendVarFlag('do_unpack', 'depends', f" {payload_image}:do_image_complete")
 }
 
-
 python do_configure() {
     import os
     import shutil
@@ -103,7 +102,7 @@ python do_configure() {
 
 do_bundle() {
     rugix-bundler bundle "${BUNDLE_DIR}" "${WORKDIR}/system.rugixb"
-
+    rugix-bundler hash "${BUNDLE_DIR}" "${WORKDIR}/system.rugixb-hash"
 }
 
 addtask bundle after do_configure before do_deploy
@@ -113,7 +112,9 @@ inherit deploy
 do_deploy() {
     install -d ${DEPLOYDIR}
 	install -m 0644 ${WORKDIR}/system.rugixb ${DEPLOYDIR}/${RUGIX_BUNDLE_NAME}.rugixb
+    install -m 0644 ${WORKDIR}/system.rugixb.hash ${DEPLOYDIR}/${RUGIX_BUNDLE_NAME}.rugixb.hash
     ln -sf ${RUGIX_BUNDLE_NAME}.rugixb ${DEPLOYDIR}/${RUGIX_BUNDLE_LINK_NAME}.rugixb
+    ln -sf ${RUGIX_BUNDLE_NAME}.rugixb.hash ${DEPLOYDIR}/${RUGIX_BUNDLE_LINK_NAME}.rugixb.hash
 }
 
 addtask deploy before do_build

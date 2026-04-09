@@ -7,6 +7,10 @@
 IMAGE_TYPES += "rugixb"
 IMAGE_TYPEDEP:rugixb = "wic"
 
+CONVERSIONTYPES += "hash"
+CONVERSION_CMD:hash = "rugix-bundler hash ${IMAGE_NAME}.${type} >${IMAGE_NAME}.${type}.hash"
+CONVERSION_DEPENDS_hash = "rugix-bundler-native"
+
 RUGIX_SLOTS ??= ""
 
 do_image_rugixb[depends] += "rugix-bundler-native:do_populate_sysroot"
@@ -66,10 +70,4 @@ SLOTEOF
     fi
 
     rugix-bundler bundle "${bundle_dir}" "${IMGDEPLOYDIR}/${IMAGE_NAME}.rugixb"
-}
-
-python() {
-    if not bb.utils.contains('DISTRO_FEATURES', 'rugix', True, False, d):
-        return
-    d.appendVar('IMAGE_INSTALL', ' packagegroup-rugix')
 }

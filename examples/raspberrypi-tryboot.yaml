@@ -12,7 +12,7 @@ local_conf_header:
     LICENSE_FLAGS_ACCEPTED = "synaptics-killswitch"
 
   image-conf: |
-    IMAGE_FSTYPES = "tar.bz2 wic wic.bmap rugixb"
+    IMAGE_FSTYPES = "tar.bz2 wic wic.bmap rugixb rugixb.hash"
     # Override the A/B system partition size (default: 4GiB).
     # RUGIX_SYSTEM_SIZE = "4GiB"
 
