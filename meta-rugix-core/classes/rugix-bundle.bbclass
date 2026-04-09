@@ -102,7 +102,7 @@ python do_configure() {
 
 do_bundle() {
     rugix-bundler bundle "${BUNDLE_DIR}" "${WORKDIR}/system.rugixb"
-    rugix-bundler hash "${BUNDLE_DIR}" "${WORKDIR}/system.rugixb-hash"
+    rugix-bundler hash "${BUNDLE_DIR}" >"${WORKDIR}/system.rugixb.hash"
 }
 
 addtask bundle after do_configure before do_deploy
