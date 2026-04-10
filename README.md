@@ -35,6 +35,7 @@ In addition the following board-specific layers (Rugix BSP layers) are provided:
 - [`meta-rugix-rpi-uboot`](./meta-rugix-rpi-uboot/): BSP layer for Raspberry Pi with U-Boot-based A/B updates. This is meant as a reference implementation. For actual field deployments, always use the `tryboot` integration.
 - [`meta-rugix-qemu-arm64-uboot`](./meta-rugix-qemu-arm64-uboot/): BSP layer for QEMU ARM64 with U-Boot-based A/B updates.
 - [`meta-rugix-qemu-x86_64-grub`](./meta-rugix-qemu-x86_64-grub/): BSP layer for QEMU x86_64 with GRUB EFI-based A/B updates.
+- [`meta-rugix-nxp-imx-uboot`](./meta-rugix-nxp-imx-uboot/): BSP layer for NXP i.MX boards (i.MX 8/8M/9 families) with U-Boot-based A/B updates, against NXP's downstream BSP (`meta-imx`). Example target: NXP FRDM-IMX91.
 
 The board-specific layers serve as **examples** for how to integrate Rugix Ctrl with specific boards and boot flows.
 Depending on your project and requirements, you may need to adapt those layers or write your own.

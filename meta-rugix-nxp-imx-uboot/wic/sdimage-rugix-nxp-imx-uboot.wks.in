@@ -1,0 +1,16 @@
+# Rugix A/B partition layout for NXP i.MX boards (8 and 9) booting from
+# SD/eMMC via U-Boot. The BootROM expects imx-boot at offset
+# ${IMX_BOOT_SEEK} KiB (32 KiB on most boards, 33 KiB on i.MX 8M Mini).
+#
+# Partition 1: Boot (FAT) - boot.scr (A/B selector) + Rugix bootstrap marker
+#              + uboot.env (created on first U-Boot saveenv).
+# Partition 2: System A rootfs.
+#
+# Bootstrapping expands the table on first boot to add System B and Data
+# partitions per bootstrapping.toml.
+
+bootloader --ptable gpt
+
+part --source rawcopy --sourceparams="file=imx-boot" --no-table --align ${IMX_BOOT_SEEK}
+part --source bootimg-partition --label boot --fstype=vfat --align 8192 --fixed-size 64M --part-type EBD0A0A2-B9E5-4433-87C0-68B6B72699C7
+part / --source rootfs --label system-a --fstype=ext4 --align 4096 --mkfs-extraopts "-O ^has_journal"

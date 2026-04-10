@@ -7,6 +7,7 @@ on:
 
 env:
   KAS_CONTAINER_ENGINE: podman
+  KAS_CONTAINER_IMAGE_DISTRO: debian-bookworm
   KAS_WORK_DIR: ${{ github.workspace }}/_kas
   KAS_BUILD_DIR: ${{ github.workspace }}/build
 
@@ -21,6 +22,8 @@ jobs:
             artifact: raspberrypi-tryboot
           - config: examples/raspberrypi-uboot.yaml
             artifact: raspberrypi-uboot
+          - config: examples/frdm-imx91.yaml
+            artifact: frdm-imx91
           - config: examples/qemu-x86_64-grub.yaml
             artifact: qemu-x86_64-grub
             test_platform: qemux86-64

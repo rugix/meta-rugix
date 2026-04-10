@@ -1,6 +1,7 @@
 set dotenv-load
 
 export KAS_CONTAINER_ENGINE := env("KAS_CONTAINER_ENGINE", "podman")
+export KAS_CONTAINER_IMAGE_DISTRO := "debian-bookworm"
 export KAS_WORK_DIR := env("KAS_WORK_DIR", justfile_directory() + "/_kas")
 export KAS_BUILD_DIR := env("KAS_BUILD_DIR", justfile_directory() + "/build")
 export SSTATE_DIR := env("SSTATE_DIR", justfile_directory() + "/cache/sstate-cache")
