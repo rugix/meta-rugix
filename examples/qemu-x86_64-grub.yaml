@@ -29,9 +29,6 @@ repos:
       meta-poky:
       meta-yocto-bsp:
 
-  meta-raspberrypi:
-    url: "https://github.com/agherzan/meta-raspberrypi.git"
-
   meta-openembedded:
     url: "https://github.com/openembedded/meta-openembedded.git"
     layers:
@@ -44,10 +41,6 @@ repos:
   meta-lts-mixins-rust:
     url: "https://git.yoctoproject.org/meta-lts-mixins"
     branch: scarthgap/rust
-
-  meta-lts-mixins-uboot:
-    url: "https://git.yoctoproject.org/meta-lts-mixins"
-    branch: scarthgap/u-boot
 
   meta-rugix:
     layers:
