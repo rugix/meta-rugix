@@ -36,10 +36,10 @@ EOF
 
         case "${slot_source}" in
             file:*)
-                # File-based slot. Relative paths resolve against DEPLOY_DIR_IMAGE;
-                # absolute paths (e.g., "${IMGDEPLOYDIR}/..." expanded by bitbake)
-                # are used as-is so BSP layers can reference files that only live
-                # in IMGDEPLOYDIR at do_image_rugixb time.
+                # File-based slot. Relative paths resolve against
+                # DEPLOY_DIR_IMAGE; absolute paths are used as-is, letting
+                # BSP layers point at files that only live in IMGDEPLOYDIR
+                # at do_image_rugixb time.
                 slot_file="${slot_source#file:}"
                 case "${slot_file}" in
                     /*) src_path="${slot_file}" ;;
