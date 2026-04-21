@@ -41,6 +41,15 @@ build-qemu-all:
     @just build examples/qemu-x86_64-grub.yaml
     @just build examples/qemu-arm64-uboot.yaml
 
+# Generate an RSA key pair for U-Boot FIT image signing.
+gen-signing-keys dir="build/keys" name="dev":
+    mkdir -p "{{dir}}"
+    openssl genrsa -out "{{dir}}/{{name}}.key" 2048
+    openssl req -batch -new -x509 \
+        -key "{{dir}}/{{name}}.key" \
+        -out "{{dir}}/{{name}}.crt" \
+        -subj "/CN=Rugix FIT Signing Dev Key"
+
 # Run the QEMU x86-64 image with GRUB EFI boot.
 [positional-arguments]
 run-qemu-x86_64 *args:

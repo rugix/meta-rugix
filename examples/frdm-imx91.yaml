@@ -37,6 +37,7 @@ local_conf_header:
 
   image-conf: |
     IMAGE_FSTYPES = "tar.bz2 wic wic.bmap rugixb rugixb.hash"
+    FIT_CONF_DEFAULT_DTB = "imx91-11x11-frdm.dtb"
     # Override the A/B system partition size (default: 4GiB).
     # RUGIX_SYSTEM_SIZE = "4GiB"
 
