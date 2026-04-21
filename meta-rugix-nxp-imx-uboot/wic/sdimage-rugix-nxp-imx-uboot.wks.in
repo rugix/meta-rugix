@@ -18,6 +18,6 @@ bootloader --ptable gpt
 
 part --source rawcopy --sourceparams="file=imx-boot" --no-table --align ${IMX_BOOT_SEEK}
 part --source bootimg-partition --fstype=vfat --align 8192 --fixed-size 32M --part-type EBD0A0A2-B9E5-4433-87C0-68B6B72699C7
-part --source rawcopy --sourceparams="file=rugix-boot.img" --align 4096 --fixed-size ${@(d.getVar('RUGIX_BOOT_SIZE') or '').rstrip('iB')} --part-type 0FC63DAF-8483-4772-8E79-3D69D8477DE4
+part --source rawcopy --sourceparams="file=${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.boot.img" --align 4096 --fixed-size ${@(d.getVar('RUGIX_BOOT_SIZE') or '').rstrip('iB')} --part-type 0FC63DAF-8483-4772-8E79-3D69D8477DE4
 part --align 4096 --fixed-size ${@(d.getVar('RUGIX_BOOT_SIZE') or '').rstrip('iB')} --part-type 0FC63DAF-8483-4772-8E79-3D69D8477DE4
-part --source rawcopy --sourceparams="file=rootfs.verity" --align 4096 --part-type 0FC63DAF-8483-4772-8E79-3D69D8477DE4
+part --source rawcopy --sourceparams="file=${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.ext4.verity" --align 4096 --part-type 0FC63DAF-8483-4772-8E79-3D69D8477DE4

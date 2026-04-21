@@ -1,6 +1,10 @@
-# Produce the two files RUGIX_SLOTS names:
-#   boot   -> rugix-boot.img  (FAT image containing the kernel FIT)
-#   system -> rootfs.verity   (ext4 + dm-verity hash tree)
+# Produce the per-image boot-slot image that RUGIX_SLOTS and the WKS
+# file reference as ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.boot.img. The
+# matching system-slot image at ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.ext4.verity
+# is produced by image_types_verity; we only consume its sidecar here.
+# Writing to IMGDEPLOYDIR (rather than DEPLOY_DIR_IMAGE directly) lets
+# do_image_complete sync both files into DEPLOY_DIR_IMAGE via the normal
+# sstate mechanism without conflicting with image_types_verity.
 #
 # kernel-fitimage.bbclass assembles and signs the kernel FIT at kernel
 # time; image_types_verity.bbclass (meta-oe) produces the verity rootfs
@@ -22,11 +26,11 @@ python do_rugix_slot_payloads() {
     deploy_dir = d.getVar("DEPLOY_DIR_IMAGE")
     image_link = d.getVar("IMAGE_LINK_NAME")
     verity_fstype = d.getVar("VERITY_IMAGE_FSTYPE") or "ext4"
-    verity_suffix = d.getVar("VERITY_IMAGE_SUFFIX") or ".verity"
     # image_types_verity.bbclass deposits sidecars next to the verity
-    # image at ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${VERITY_IMAGE_FSTYPE}{suffix,-info,-params}.
-    base = os.path.join(imgdeploydir, image_link + "." + verity_fstype)
-    params_file = base + ".verity-params"
+    # image at ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${VERITY_IMAGE_FSTYPE}.verity-params.
+    params_file = os.path.join(
+        imgdeploydir, image_link + "." + verity_fstype + ".verity-params"
+    )
     if not os.path.exists(params_file):
         bb.fatal("verity params not found at %s (is 'verity' in IMAGE_FSTYPES?)" % params_file)
     params = {}
@@ -43,9 +47,6 @@ python do_rugix_slot_payloads() {
         bb.fatal("verity params file %s is missing required fields" % params_file)
     hash_offset = data_blocks * block_size
     bb.note("Root hash %s, hash offset %d" % (root_hash, hash_offset))
-
-    verity_file = os.path.realpath(base + verity_suffix)
-    shutil.copyfile(verity_file, os.path.join(deploy_dir, "rootfs.verity"))
 
     # kernel-fitimage.bbclass deploys the initramfs-carrying FIT as
     # fitImage-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_LINK_NAME}, where
@@ -97,7 +98,7 @@ python do_rugix_slot_payloads() {
     subprocess.check_call([
         "mcopy", "-i", boot_image, rugix_fit, "::fitImage",
     ])
-    shutil.copyfile(boot_image, os.path.join(deploy_dir, "rugix-boot.img"))
+    shutil.copyfile(boot_image, os.path.join(imgdeploydir, image_link + ".boot.img"))
 }
 
 def iec_to_kib(size):

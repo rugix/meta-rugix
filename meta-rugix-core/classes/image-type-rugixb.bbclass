@@ -2,8 +2,9 @@
 #
 # Produces a .rugixb update bundle. BSP sublayers set RUGIX_SLOTS in
 # their layer.conf to map slot names to sources:
-#   "system:2"              - WIC partition number
-#   "boot:file:fitImage"    - file from DEPLOY_DIR_IMAGE
+#   "system:2"                     - WIC partition number
+#   "boot:file:fitImage"           - file in DEPLOY_DIR_IMAGE (relative)
+#   "boot:file:/path/to/file.img"  - absolute path (e.g., IMGDEPLOYDIR)
 
 IMAGE_TYPES += "rugixb"
 IMAGE_TYPEDEP:rugixb = "wic"
@@ -35,12 +36,19 @@ EOF
 
         case "${slot_source}" in
             file:*)
-                # File-based slot: copy from DEPLOY_DIR_IMAGE.
+                # File-based slot. Relative paths resolve against DEPLOY_DIR_IMAGE;
+                # absolute paths (e.g., "${IMGDEPLOYDIR}/..." expanded by bitbake)
+                # are used as-is so BSP layers can reference files that only live
+                # in IMGDEPLOYDIR at do_image_rugixb time.
                 slot_file="${slot_source#file:}"
-                if [ ! -f "${DEPLOY_DIR_IMAGE}/${slot_file}" ]; then
-                    bbfatal "File ${slot_file} not found in DEPLOY_DIR_IMAGE for slot ${slot_name}"
+                case "${slot_file}" in
+                    /*) src_path="${slot_file}" ;;
+                    *)  src_path="${DEPLOY_DIR_IMAGE}/${slot_file}" ;;
+                esac
+                if [ ! -f "${src_path}" ]; then
+                    bbfatal "File ${src_path} not found for slot ${slot_name}"
                 fi
-                cp "${DEPLOY_DIR_IMAGE}/${slot_file}" "${bundle_dir}/payloads/payload${payload_idx}.raw"
+                cp "${src_path}" "${bundle_dir}/payloads/payload${payload_idx}.raw"
                 ;;
             *)
                 # Partition-based slot: copy from WIC build directory.
