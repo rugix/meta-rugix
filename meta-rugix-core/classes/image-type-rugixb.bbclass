@@ -1,8 +1,9 @@
 # Rugix bundle image type.
 #
-# Produces a .rugixb update bundle from WIC image partitions. BSP sublayers
-# set RUGIX_SLOTS in their layer.conf to map slot names to WIC partition
-# numbers (e.g., "system:2" or "boot:2 system:4").
+# Produces a .rugixb update bundle. BSP sublayers set RUGIX_SLOTS in
+# their layer.conf to map slot names to sources:
+#   "system:2"              - WIC partition number
+#   "boot:file:fitImage"    - file from DEPLOY_DIR_IMAGE
 
 IMAGE_TYPES += "rugixb"
 IMAGE_TYPEDEP:rugixb = "wic"
@@ -30,26 +31,38 @@ EOF
     payload_idx=1
     for slot_spec in ${RUGIX_SLOTS}; do
         slot_name="${slot_spec%%:*}"
-        partition_num="${slot_spec##*:}"
+        slot_source="${slot_spec#*:}"
 
-        partition_file=""
-        for f in "${wic_build_dir}"/*.direct.p${partition_num}; do
-            if [ -f "$f" ]; then
-                partition_file="$f"
-                break
-            fi
-        done
-
-        if [ -z "${partition_file}" ]; then
-            bbfatal "Partition ${partition_num} not found in WIC build directory for slot ${slot_name}"
-        fi
-
-        cp "${partition_file}" "${bundle_dir}/payloads/partition${payload_idx}.img"
+        case "${slot_source}" in
+            file:*)
+                # File-based slot: copy from DEPLOY_DIR_IMAGE.
+                slot_file="${slot_source#file:}"
+                if [ ! -f "${DEPLOY_DIR_IMAGE}/${slot_file}" ]; then
+                    bbfatal "File ${slot_file} not found in DEPLOY_DIR_IMAGE for slot ${slot_name}"
+                fi
+                cp "${DEPLOY_DIR_IMAGE}/${slot_file}" "${bundle_dir}/payloads/payload${payload_idx}.raw"
+                ;;
+            *)
+                # Partition-based slot: copy from WIC build directory.
+                partition_num="${slot_source}"
+                partition_file=""
+                for f in "${wic_build_dir}"/*.direct.p${partition_num}; do
+                    if [ -f "$f" ]; then
+                        partition_file="$f"
+                        break
+                    fi
+                done
+                if [ -z "${partition_file}" ]; then
+                    bbfatal "Partition ${partition_num} not found in WIC build directory for slot ${slot_name}"
+                fi
+                cp "${partition_file}" "${bundle_dir}/payloads/payload${payload_idx}.raw"
+                ;;
+        esac
 
         cat >> "${bundle_dir}/rugix-bundle.toml" << SLOTEOF
 
 [[payloads]]
-filename = "partition${payload_idx}.img"
+filename = "payload${payload_idx}.raw"
 
 [payloads.delivery]
 type = "slot"

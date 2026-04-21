@@ -23,12 +23,14 @@ python __anonymous() {
         d.appendVarFlag("do_unpack", "vardeps", f" {payload_var}")
 
         payload_image = payload_flags.get("image")
+        payload_file = payload_flags.get("file")
 
-        if not payload_image:
-            bb.error(f"No image set for payload {repr(payload)}.")
+        if not payload_image and not payload_file:
+            bb.error(f"No image or file set for payload {repr(payload)}.")
             return
 
-        d.appendVarFlag('do_unpack', 'depends', f" {payload_image}:do_image_complete")
+        if payload_image:
+            d.appendVarFlag('do_unpack', 'depends', f" {payload_image}:do_image_complete")
 }
 
 python do_configure() {
@@ -59,36 +61,47 @@ python do_configure() {
 
     lines = ['update-type = "full"', 'hash-algorithm = "sha512-256"']
 
-    for partition, payload in enumerate(payloads, 1):
+    for payload_idx, payload in enumerate(payloads, 1):
         payload_var = f"RUGIX_PAYLOAD_{payload}"
         payload_flags = d.getVarFlags(payload_var) or {}
         d.appendVarFlag("do_unpack", "vardeps", f" {payload_var}")
 
         payload_image = payload_flags.get("image")
         payload_partition = payload_flags.get("partition")
+        payload_file = payload_flags.get("file")
         payload_slot = payload_flags.get("slot") or payload
 
-        if not payload_partition:
-            bb.error(f"No partition set for payload {repr(payload)}.")
+        payload_filename = f"payload{payload_idx}.raw"
+
+        if payload_file:
+            # File-based payload: copy directly from DEPLOY_DIR_IMAGE.
+            src = deploy_dir_image / payload_file
+            if not src.exists():
+                bb.error(f"Payload file {payload_file} not found in {deploy_dir_image}.")
+                return
+            shutil.copy2(src, payloads_dir / payload_filename)
+        elif payload_partition:
+            # WIC partition-based payload.
+            partition_prefix = f"{payload_image}-{machine}"
+            partition_suffix = f"p{payload_partition}"
+            partition_file = None
+            for file in deploy_dir_partitions.iterdir():
+                if not file.name.startswith(partition_prefix):
+                    continue
+                if not file.name.endswith(partition_suffix):
+                    continue
+                partition_file = file
+                break
+            if not partition_file:
+                bb.error(f"Partition {payload_partition} of image {payload_image} not found.")
+                return
+            shutil.copy2(partition_file, payloads_dir / payload_filename)
+        else:
+            bb.error(f"No partition or file set for payload {repr(payload)}.")
             return
-        
-        partition_prefix = f"{payload_image}-{machine}"
-        partition_suffix = f"p{payload_partition}"
-        partition_file = None
-        for file in deploy_dir_partitions.iterdir():
-            if not file.name.startswith(partition_prefix):
-                continue
-            if not file.name.endswith(partition_suffix):
-                continue
-            partition_file = file
-            break
-        if not partition_file:
-            bb.error(f"Partition {payload_partition} of image {payload_image} not found.")
-            return
-        shutil.copy2(partition_file, payloads_dir / f"partition{partition}.img")
 
         lines.append("[[payloads]]")
-        lines.append(f'filename = "partition{partition}.img"')
+        lines.append(f'filename = "{payload_filename}"')
         lines.append("[payloads.delivery]")
         lines.append('type = "slot"')
         lines.append(f'slot = "{payload_slot}"')
