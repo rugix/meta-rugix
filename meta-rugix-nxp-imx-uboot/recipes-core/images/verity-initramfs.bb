@@ -1,10 +1,10 @@
-SUMMARY = "Rugix initramfs with dm-verity support"
+SUMMARY = "Initramfs that sets up a dm-verity root filesystem before pivoting"
 LICENSE = "MIT"
 
 PACKAGE_INSTALL = " \
     initramfs-framework-base \
     initramfs-module-udev \
-    rugix-initramfs-module-verity \
+    verity-initramfs-module \
     ${VIRTUAL-RUNTIME_base-utils} \
 "
 
