@@ -21,7 +21,7 @@ local_conf_header:
     IMAGE_BUILDINFO_VARS:append = " DEVICE_MODEL"
 
     # Enable automatic network configuration.
-    IMAGE_INSTALL:append = " networkmanager rugix-admin rugix-ctrl-daemon"
+    IMAGE_INSTALL:append = " networkmanager"
     PACKAGECONFIG:append:pn-systemd = " networkd resolved"
 
     # Rugix-specific configuration.
