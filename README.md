@@ -31,7 +31,7 @@ We only support Yocto LTS releases and maintain a dedicated branch for each (e.g
 
 This branch targets Yocto Wrynose. The Rugix core layer, QEMU BSP examples, and Raspberry Pi BSP examples are the supported baseline.
 
-This branch carries Rugix Ctrl 1.2.0 and 1.3.0 recipes. BitBake selects the
+This branch carries Rugix Ctrl 1.2.0, 1.3.0, and 1.3.1 recipes. BitBake selects the
 latest compatible version unless the distribution pins another one.
 
 ## Getting Started
@@ -68,7 +68,7 @@ Both systemd services are enabled automatically. Rugix Admin listens on the
 loopback interface by default, and optional privileged operation families
 remain disabled until explicitly enabled.
 
-All examples select Rugix Ctrl 1.3 and include Rugix Admin and the privileged
+All examples select Rugix Ctrl 1.3.1 and include Rugix Admin and the privileged
 operation daemon.
 
 Configure the daemon recipe from your distribution configuration or
