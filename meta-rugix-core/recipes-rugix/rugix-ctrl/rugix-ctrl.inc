@@ -7,6 +7,8 @@ S = "${WORKDIR}/git"
 
 inherit cargo
 
+RDEPENDS:${PN} += "ca-certificates"
+
 do_compile[network] = "1"
 CARGO_DISABLE_BITBAKE_VENDORING = "1"
 CARGO_BUILD_FLAGS:append = " --bin rugix-ctrl --bin rugix-bundler "
