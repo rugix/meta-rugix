@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Create automation token
         id: app-token
-        uses: actions/create-github-app-token@v3.2.0
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           client-id: ${{ vars.RUGIX_AUTOMATION_CLIENT_ID }}
           private-key: ${{ secrets.RUGIX_AUTOMATION_PRIVATE_KEY }}
@@ -32,14 +32,14 @@ jobs:
           permission-pull-requests: write
 
       - name: Checkout automation
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: ${{ steps.app-token.outputs.token }}
           ref: main
           path: automation
 
       - name: Checkout ${{ matrix.branch }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: ${{ steps.app-token.outputs.token }}
           ref: ${{ matrix.branch }}
@@ -47,7 +47,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install mise
-        uses: jdx/mise-action@v4
+        uses: jdx/mise-action@8418fedb1110381a0d3ba51a7a415d7c1b884550 # v5.2.2
         with:
           working_directory: automation
           install: false
