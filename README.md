@@ -52,8 +52,16 @@ Depending on your project and requirements, you may need to adapt those layers o
 
 ## Rugix Admin
 
-Add Rugix Admin to an image that already integrates Rugix Ctrl by installing
-the `rugix-admin` package:
+Scarthgap examples select Rugix Ctrl 1.3.1 and omit Rugix Admin and its
+privileged operation daemon by default.
+
+Building Rugix Admin's frontend requires a `nodejs-native` recipe that meets
+[Vite 8's Node.js requirements](https://v8.vite.dev/guide/): Node.js 20.19+ or
+22.12+. The pinned FRDM i.MX91 BSP provides Node.js 20.12.2, so it needs a
+newer native Node.js recipe before Rugix Admin can be enabled.
+
+With a compatible native Node.js toolchain, add Rugix Admin to an image that
+already integrates Rugix Ctrl by installing the `rugix-admin` package:
 
 ```bitbake
 IMAGE_INSTALL:append = " rugix-admin"
@@ -63,9 +71,6 @@ The package pulls in `rugix-ctrl-daemon` and a compatible `rugix-ctrl` release.
 Both systemd services are enabled automatically. Rugix Admin listens on the
 loopback interface by default, and optional privileged operation families
 remain disabled until explicitly enabled.
-
-All examples select Rugix Ctrl 1.3.1 and include Rugix Admin and the privileged
-operation daemon.
 
 Configure the daemon recipe from your distribution configuration or
 `local.conf` with the following Boolean variables:
