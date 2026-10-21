@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/refs/heads/master/kas/schema-kas.json
+
+# CI settings on top of an example. On the CI runners, `SI_RUNNERS_PREMIRRORS`
+# holds `PREMIRRORS` entries for a mirror of source downloads. Elsewhere, it is
+# empty. Builds also create mirror tarballs of Git repositories, which the runners
+# add to the mirror.
+
+header:
+  version: 14
+
+env:
+  SI_RUNNERS_PREMIRRORS: ""
+
+local_conf_header:
+  ci-premirrors: |
+    PREMIRRORS:prepend = "${SI_RUNNERS_PREMIRRORS} "
+    BB_GENERATE_MIRROR_TARBALLS = "1"

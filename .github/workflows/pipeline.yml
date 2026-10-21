@@ -28,6 +28,8 @@ jobs:
             artifact: raspberrypi-tryboot
           - config: examples/raspberrypi-uboot.yaml
             artifact: raspberrypi-uboot
+    env:
+      KAS_FILES: ${{ matrix.config }}:.github/kas/ci.yaml
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -38,13 +40,13 @@ jobs:
         run: mkdir -p "$KAS_WORK_DIR" "$KAS_BUILD_DIR"
 
       - name: Validate KAS config and checkout layers
-        run: kas-container checkout ${{ matrix.config }}
+        run: kas-container checkout "$KAS_FILES"
 
       - name: Parse recipes
-        run: kas-container shell ${{ matrix.config }} -c "bitbake -p"
+        run: kas-container --runtime-args "-e SI_RUNNERS_PREMIRRORS" shell "$KAS_FILES" -c "bitbake -p"
 
       - name: Build
-        run: kas-container build ${{ matrix.config }}
+        run: kas-container --runtime-args "-e SI_RUNNERS_PREMIRRORS" build "$KAS_FILES"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v7
