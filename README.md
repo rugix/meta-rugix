@@ -197,6 +197,25 @@ IMAGE_INSTALL:append:my-machine = " packagegroup-rugix-bsp"
 
 **Creating a BSP layer.** To create a Rugix BSP layer for a new board, start from one of the provided BSP layers and adapt it. See the [Rugix documentation](https://rugix.org/docs/ctrl/updates/system-updates/boot-flows/) for the available boot flows and configuration options.
 
+## Testing QEMU Images
+
+The QEMU integration tests require a built image, QEMU, `just`, and `uv`.
+The test VM needs access to Docker Hub to pull the test container image.
+Before testing an image with Apps enabled, prepare the app bundles inside KAS.
+Yocto's native tools depend on paths and libraries in that build environment.
+
+For example, build and test the ARM64 image with:
+
+```sh
+git submodule update --init --recursive
+just build examples/qemu-arm64-uboot.yaml
+just kas shell examples/qemu-arm64-uboot.yaml -c "python3 /repo/tests/prepare_app_bundles.py"
+just test-arm64
+```
+
+Use `examples/qemu-x86_64-grub.yaml` and `just test-x86_64` for x86-64.
+CI prepares these bundles before running the existing QEMU test jobs.
+
 ## Community Showcase
 
 - [Nexigon](https://github.com/nexigon) is a device management and remote access solution. Its [`meta-nexigon`](https://github.com/nexigon/meta-nexigon) layers come with an official Rugix integration, enabling seamless system updates through the cloud.

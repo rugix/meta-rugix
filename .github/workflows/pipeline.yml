@@ -62,6 +62,10 @@ jobs:
             build/tmp/deploy/images/**/*.rootfs.rugixb
             build/tmp/deploy/images/**/*.rootfs.rugixb.hash
 
+      - name: Prepare app test bundles
+        if: matrix.test_platform
+        run: kas-container shell "$KAS_FILES" -c "python3 /repo/tests/prepare_app_bundles.py"
+
       - name: Test
         if: matrix.test_platform
         run: just test -k "${{ matrix.test_platform }} or docker_component_metadata"
