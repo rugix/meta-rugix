@@ -1,0 +1,12 @@
+[Unit]
+Description=Restore Rugix app units into systemd
+After=local-fs.target
+Before=rugix-apps-recover.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/rugix-ctrl apps service-manager systemd restore-units
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

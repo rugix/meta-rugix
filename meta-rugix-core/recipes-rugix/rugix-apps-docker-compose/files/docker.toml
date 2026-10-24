@@ -1,0 +1,5 @@
+[[persist]]
+directory = "/var/lib/docker"
+
+[[persist]]
+directory = "/var/lib/containerd"

@@ -1,0 +1,33 @@
+#!/bin/sh
+set -eu
+
+components_dir="${RUGIX_COMPONENTS_DIR:-/run/rugix/components}"
+mkdir -p "$components_dir"
+
+docker_version="$(docker version --format '{{.Server.Version}}')"
+compose_version="$(docker compose version --short)"
+docker_version="${docker_version#v}"
+compose_version="${compose_version#v}"
+
+# Only version characters may be interpolated into the TOML strings.
+for version in "$docker_version" "$compose_version"; do
+    case "$version" in
+        ""|*[!0-9A-Za-z.+-]*)
+            echo "Invalid Docker runtime version: $version" >&2
+            exit 1
+            ;;
+    esac
+done
+
+tmp="$(mktemp "$components_dir/.docker.toml.XXXXXX")"
+trap 'rm -f "$tmp"' EXIT HUP INT TERM
+cat >"$tmp" <<EOF
+id = "runtime.docker"
+version = "$docker_version"
+
+[[provides]]
+id = "runtime.docker-compose"
+version = "$compose_version"
+EOF
+chmod 0644 "$tmp"
+mv "$tmp" "$components_dir/docker.toml"

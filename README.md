@@ -54,6 +54,87 @@ In addition the following board-specific layers (Rugix BSP layers) are provided:
 The board-specific layers serve as **examples** for how to integrate Rugix Ctrl with specific boards and boot flows.
 Depending on your project and requirements, you may need to adapt those layers or write your own.
 
+## Optional Features
+
+`RUGIX_FEATURES` is a space-separated list of optional image integrations. Set it
+in your distribution configuration, `local.conf`, or image recipe. It defaults
+to an empty list. A global setting applies to every image, including rescue
+and initramfs images. To select the feature for one image instead, use a recipe
+override, for example:
+
+```bitbake
+RUGIX_FEATURES:pn-core-image-minimal = "apps-docker-compose"
+```
+
+| Feature | Installs |
+| --- | --- |
+| `apps` | Rugix Apps systemd services for restoring app units and recovering interrupted deployments. |
+| `apps-docker-compose` | Everything in `apps`, Docker Engine, the Compose plugin, persistent Docker storage, and runtime component metadata. |
+
+Both features require `systemd` in `DISTRO_FEATURES` and Rugix Ctrl 1.3.0 or
+newer. For binary or generic apps, enable only `apps`:
+
+```bitbake
+RUGIX_FEATURES:append = " apps"
+```
+
+### Docker Compose Apps
+
+For example, build the QEMU x86-64 image with Docker Compose support by adding
+the provided KAS fragment:
+
+```sh
+mise run build examples/qemu-x86_64-grub.yaml:examples/include/apps-docker-compose.yaml
+```
+
+The fragment adds the Wrynose branch of `meta-virtualization`, selects the
+Compose plugin, and enables the required distro features. It can also be
+combined with the QEMU ARM64 example.
+
+For an existing Yocto project, add `meta-virtualization` and its dependencies
+(`meta-oe`, `meta-python`, `meta-networking`, and `meta-filesystems`) to
+`BBLAYERS`, using branches matching your Yocto release. Then configure:
+
+```bitbake
+RUGIX_FEATURES:append = " apps-docker-compose"
+DISTRO_FEATURES:append = " virtualization seccomp ipv6"
+PACKAGECONFIG:append:pn-docker-compose = " docker-plugin"
+```
+
+Use systemd as the init manager, as the supplied examples do. Unknown Rugix
+features and missing required layers or distro features cause an image parse
+error.
+
+The `virtualization` feature enables Docker kernel configuration through
+`meta-virtualization` for the examples' `linux-yocto` kernels. With a custom
+kernel, enable Docker's required namespaces, cgroups, networking, seccomp, and
+overlayfs support in your BSP.
+
+The integration enables Docker and the Apps boot services. It publishes
+`runtime.docker` and `runtime.docker-compose` component capabilities after
+Docker starts, before interrupted app deployments are recovered. App generations
+and data use Rugix's state directory. Docker images, containers, and volumes
+persist through `/etc/rugix/state/docker.toml`, which persists
+`/var/lib/docker` and `/var/lib/containerd`. These defaults assume Rugix state
+management is active and Docker uses its default storage paths. Adapt the state
+configuration if you change those paths.
+
+Compose services that should return after a reboot need a restart policy.
+For example:
+
+```yaml
+services:
+  web:
+    image: nginx:alpine
+    restart: unless-stopped
+```
+
+Package and deploy stacks as described in the
+[Rugix Apps documentation](https://rugix.org/docs/ctrl/application-management/).
+Enabling an Apps feature does not grant app lifecycle permissions through the
+privileged daemon. Enable `RUGIX_CTRL_DAEMON_APP_LIFECYCLE` separately if Rugix
+Admin should manage apps, as described below.
+
 ## Rugix Admin
 
 Add Rugix Admin to an image that already integrates Rugix Ctrl by installing

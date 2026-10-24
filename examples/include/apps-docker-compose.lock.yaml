@@ -1,0 +1,7 @@
+header:
+  version: 14
+
+overrides:
+  repos:
+    meta-virtualization:
+      commit: 18d58082b2458cf85438ac6e0f2f1fd0153318cb

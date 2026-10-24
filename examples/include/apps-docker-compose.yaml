@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/refs/heads/master/kas/schema-kas.json
+header:
+  version: 14
+
+repos:
+  meta-virtualization:
+    url: https://git.yoctoproject.org/meta-virtualization
+    branch: wrynose
+
+local_conf_header:
+  rugix-apps-docker-compose: |
+    RUGIX_FEATURES:append = " apps-docker-compose"
+    DISTRO_FEATURES:append = " virtualization seccomp ipv6"
+    PACKAGECONFIG:append:pn-docker-compose = " docker-plugin"
