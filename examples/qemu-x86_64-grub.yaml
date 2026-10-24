@@ -4,6 +4,7 @@ header:
   includes:
     - examples/include/common.yaml
     - examples/include/base.yaml
+    - examples/include/apps-docker-compose.yaml
 
 local_conf_header:
   image-conf: |

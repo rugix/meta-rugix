@@ -80,16 +80,17 @@ RUGIX_FEATURES:append = " apps"
 
 ### Docker Compose Apps
 
-For example, build the QEMU x86-64 image with Docker Compose support by adding
-the provided KAS fragment:
+Both QEMU examples enable Docker Compose Apps through the
+`examples/include/apps-docker-compose.yaml` KAS fragment. For example, build
+the QEMU x86-64 image with:
 
 ```sh
-mise run build examples/qemu-x86_64-grub.yaml:examples/include/apps-docker-compose.yaml
+mise run build examples/qemu-x86_64-grub.yaml
 ```
 
 The fragment adds the Wrynose branch of `meta-virtualization`, selects the
-Compose plugin, and enables the required distro features. It can also be
-combined with the QEMU ARM64 example.
+Compose plugin, and enables the required distro features. Include it in other
+KAS configurations to enable the same integration.
 
 For an existing Yocto project, add `meta-virtualization` and its dependencies
 (`meta-oe`, `meta-python`, `meta-networking`, and `meta-filesystems`) to

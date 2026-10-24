@@ -2,6 +2,7 @@ name: CI Pipeline
 
 on:
   push:
+    branches: [main, wrynose]
   pull_request:
     branches: [main, wrynose]
 
@@ -20,9 +21,6 @@ jobs:
         include:
           - config: examples/qemu-x86_64-grub.yaml
             artifact: qemu-x86_64-grub
-            test_platform: qemux86-64
-          - config: examples/qemu-x86_64-grub.yaml:examples/include/apps-docker-compose.yaml
-            artifact: qemu-x86_64-grub-apps
             test_platform: qemux86-64
           - config: examples/qemu-arm64-uboot.yaml
             artifact: qemu-arm64-uboot
@@ -49,7 +47,7 @@ jobs:
         run: kas-container --runtime-args "-e SI_RUNNERS_PREMIRRORS" shell "$KAS_FILES" -c "bitbake -p"
 
       - name: Test optional features
-        if: contains(matrix.config, 'apps-docker-compose')
+        if: matrix.test_platform == 'qemux86-64'
         run: kas-container shell "$KAS_FILES" -c "python3 /repo/tests/test_features.py"
 
       - name: Build
@@ -72,5 +70,5 @@ jobs:
         if: matrix.test_platform && !cancelled()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: test-outputs-${{ matrix.artifact }}
+          name: test-outputs-${{ matrix.test_platform }}
           path: test-outputs/
