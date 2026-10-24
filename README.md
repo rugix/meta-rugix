@@ -113,8 +113,10 @@ overlayfs support in your BSP.
 
 The integration enables Docker and the Apps boot services. It publishes
 `runtime.docker` and `runtime.docker-compose` component capabilities after
-Docker starts, before interrupted app deployments are recovered. App generations
-and data use Rugix's state directory. Docker images, containers, and volumes
+Docker starts, before interrupted app deployments are recovered. Numeric runtime
+versions support version constraints. Development labels such as `dev` are
+published as capability values instead. App generations and data use Rugix's
+state directory. Docker images, containers, and volumes
 persist through `/etc/rugix/state/docker.toml`, which persists
 `/var/lib/docker` and `/var/lib/containerd`. These defaults assume Rugix state
 management is active and Docker uses its default storage paths. Adapt the state

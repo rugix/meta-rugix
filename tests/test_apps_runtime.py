@@ -44,6 +44,22 @@ def test_docker_component_metadata(tmp_path: Path):
         "provides": [{"id": "runtime.docker-compose", "version": "5.1.0"}],
     }
 
+    env["TEST_COMPOSE_VERSION"] = "dev"
+    subprocess.run(["sh", str(SCRIPT)], env=env, check=True)
+    assert tomllib.loads(output.read_text())["provides"] == [
+        {"id": "runtime.docker-compose", "value": "dev"}
+    ]
+
+    env["TEST_DOCKER_VERSION"] = "vNext"
+    subprocess.run(["sh", str(SCRIPT)], env=env, check=True)
+    assert tomllib.loads(output.read_text()) == {
+        "id": "runtime.docker",
+        "provides": [
+            {"id": "runtime.docker", "value": "vNext"},
+            {"id": "runtime.docker-compose", "value": "dev"},
+        ],
+    }
+
     original = output.read_bytes()
     for version in ("fail", '5.1.0"\nid = "injected'):
         env["TEST_COMPOSE_VERSION"] = version

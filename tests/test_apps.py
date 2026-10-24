@@ -5,7 +5,9 @@ import os
 import subprocess
 import tarfile
 import time
+from collections.abc import Generator
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 import pytest
 from rugix_testkit import RugixCtrl, VMHandle
@@ -14,8 +16,9 @@ APP = "rugix-compose-test"
 
 
 @pytest.mark.slow
+@pytest.mark.timeout(1200)
 def test_compose_app_lifecycle(
-    vm: VMHandle, build_dir: Path, bundle_url: str, tmp_path: Path
+    vm: VMHandle, build_dir: Path, bundle_url: str, app_root: Path
 ):
     """Keep a stack and its data through reboot, system update, and app rollback."""
     if not vm.run(["test", "-x", "/usr/bin/docker"], check=False, hide=True).ok:
@@ -23,7 +26,12 @@ def test_compose_app_lifecycle(
 
     _wait_for_service(vm, "rugix-apps-recover.service")
     vm.run(["docker", "compose", "version"], hide=True)
-    vm.run(["rugix-ctrl", "components", "info", "runtime.docker"], hide=True)
+    component = vm.run(
+        ["rugix-ctrl", "components", "info", "runtime.docker"],
+        check=False,
+        hide=True,
+    )
+    assert component.ok, str(component)
     vm.run(["docker", "pull", "busybox:1.37.0"], hide=True)
 
     bundlers = sorted(
@@ -36,7 +44,8 @@ def test_compose_app_lifecycle(
     )
     assert bundler, "Set RUGIX_BUNDLER to the native binary from the image build"
 
-    _install_app(vm, bundler, tmp_path, "one")
+    app_url = f"{bundle_url.rsplit('/', 2)[0]}/{app_root.name}"
+    _install_app(vm, bundler, app_root, "one", app_url)
     _wait_for_version(vm, "one")
     vm.run(["docker", "exec", APP, "touch", "/data/sentinel"], hide=True)
     vm.reboot()
@@ -50,14 +59,22 @@ def test_compose_app_lifecycle(
     _wait_for_version(vm, "one")
     vm.run(["docker", "exec", APP, "test", "-f", "/data/sentinel"], hide=True)
 
-    _install_app(vm, bundler, tmp_path, "two")
+    _install_app(vm, bundler, app_root, "two", app_url)
     _wait_for_version(vm, "two")
     vm.run(["rugix-ctrl", "apps", "activate", APP, "1"], hide=True)
     _wait_for_version(vm, "one")
     vm.run(["docker", "exec", APP, "test", "-f", "/data/sentinel"], hide=True)
 
 
-def _install_app(vm: VMHandle, bundler: str, root: Path, version: str):
+@pytest.fixture
+def app_root(build_dir: Path) -> Generator[Path]:
+    with TemporaryDirectory(
+        prefix="rugix-app-test-", dir=build_dir / "tmp/deploy/images"
+    ) as directory:
+        yield Path(directory)
+
+
+def _install_app(vm: VMHandle, bundler: str, root: Path, version: str, url: str):
     directory = root / version
     payloads = directory / "payloads"
     payloads.mkdir(parents=True)
@@ -89,24 +106,27 @@ def _install_app(vm: VMHandle, bundler: str, root: Path, version: str):
         'update-type = "full"\n'
         '[[payloads]]\nfilename = "app.tar"\n'
         f'[payloads.delivery]\ntype = "app-archive"\napp = "{APP}"\n'
+        '[payloads.block-encoding]\nchunker = "casync-64"\n'
+        'hash-algorithm = "sha512_256"\n'
     )
     bundle = root / f"{version}.rugixb"
     subprocess.run([bundler, "bundle", str(directory), str(bundle)], check=True)
     bundle_hash = subprocess.check_output(
         [bundler, "hash", str(bundle)], text=True
     ).strip()
-    vm.upload(bundle, "/tmp/app.rugixb")
-    vm.run(
+    result = vm.run(
         [
             "rugix-ctrl",
             "apps",
             "install",
             "--bundle-hash",
             bundle_hash,
-            "/tmp/app.rugixb",
+            f"{url}/{bundle.name}",
         ],
+        check=False,
         hide=True,
     )
+    assert result.ok, str(result)
 
 
 def _wait_for_service(vm: VMHandle, service: str):

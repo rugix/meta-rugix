@@ -6,8 +6,6 @@ mkdir -p "$components_dir"
 
 docker_version="$(docker version --format '{{.Server.Version}}')"
 compose_version="$(docker compose version --short)"
-docker_version="${docker_version#v}"
-compose_version="${compose_version#v}"
 
 # Only version characters may be interpolated into the TOML strings.
 for version in "$docker_version" "$compose_version"; do
@@ -19,15 +17,33 @@ for version in "$docker_version" "$compose_version"; do
     esac
 done
 
+# Development builds may report labels such as "dev" instead of versions.
+# Keep those labels as capability values, as Rugix requires numeric releases.
+version_field() {
+    if printf '%s\n' "${1#v}" | grep -Eq '^[0-9]+(\.[0-9]+)*(-[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*)?(\+[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*)?$'; then
+        echo version
+    else
+        echo value
+    fi
+}
+
 tmp="$(mktemp "$components_dir/.docker.toml.XXXXXX")"
 trap 'rm -f "$tmp"' EXIT HUP INT TERM
-cat >"$tmp" <<EOF
-id = "runtime.docker"
-version = "$docker_version"
-
-[[provides]]
-id = "runtime.docker-compose"
-version = "$compose_version"
-EOF
+{
+    echo 'id = "runtime.docker"'
+    docker_field="$(version_field "$docker_version")"
+    if [ "$docker_field" = value ]; then
+        printf '\n[[provides]]\nid = "runtime.docker"\n'
+    else
+        docker_version="${docker_version#v}"
+    fi
+    printf '%s = "%s"\n' "$docker_field" "$docker_version"
+    printf '\n[[provides]]\nid = "runtime.docker-compose"\n'
+    compose_field="$(version_field "$compose_version")"
+    if [ "$compose_field" = version ]; then
+        compose_version="${compose_version#v}"
+    fi
+    printf '%s = "%s"\n' "$compose_field" "$compose_version"
+} >"$tmp"
 chmod 0644 "$tmp"
 mv "$tmp" "$components_dir/docker.toml"
