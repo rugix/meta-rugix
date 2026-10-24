@@ -2,6 +2,7 @@ name: CI Pipeline
 
 on:
   push:
+    branches: [main, wrynose]
   pull_request:
     branches: [main, wrynose]
 
@@ -45,6 +46,10 @@ jobs:
       - name: Parse recipes
         run: kas-container --runtime-args "-e SI_RUNNERS_PREMIRRORS" shell "$KAS_FILES" -c "bitbake -p"
 
+      - name: Test optional features
+        if: matrix.test_platform == 'qemux86-64'
+        run: kas-container shell "$KAS_FILES" -c "python3 /repo/tests/test_features.py"
+
       - name: Build
         run: kas-container --runtime-args "-e SI_RUNNERS_PREMIRRORS" build "$KAS_FILES"
 
@@ -57,9 +62,13 @@ jobs:
             build/tmp/deploy/images/**/*.rootfs.rugixb
             build/tmp/deploy/images/**/*.rootfs.rugixb.hash
 
+      - name: Prepare app test bundles
+        if: matrix.test_platform
+        run: kas-container shell "$KAS_FILES" -c "python3 /repo/tests/prepare_app_bundles.py"
+
       - name: Test
         if: matrix.test_platform
-        run: just test -k "${{ matrix.test_platform }}"
+        run: just test -k "${{ matrix.test_platform }} or docker_component_metadata"
 
       - name: Upload test outputs
         if: matrix.test_platform && !cancelled()
