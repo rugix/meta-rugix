@@ -32,7 +32,9 @@ We only support Yocto LTS releases and maintain a dedicated branch for each (e.g
 This branch targets Yocto Wrynose. The Rugix core layer, QEMU BSP examples, and Raspberry Pi BSP examples are the supported baseline.
 
 This branch carries Rugix Ctrl 1.2.0, 1.3.0, and 1.3.1 recipes. BitBake selects the
-latest compatible version unless the distribution pins another one.
+latest compatible version unless the distribution pins another one. To test
+unreleased changes, `PREFERRED_VERSION_rugix-ctrl = "0+git"` builds Rugix Ctrl from the
+`main` branch of Rugix instead.
 
 ## Getting Started
 
