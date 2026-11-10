@@ -37,6 +37,11 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Prepare mise platform detection
+        run: |
+          ldd_path=$(nix develop --command bash -c 'command -v ldd')
+          dirname "$ldd_path" >> "$GITHUB_PATH"
+
       - uses: jdx/mise-action@8418fedb1110381a0d3ba51a7a415d7c1b884550 # v5.2.2
         with:
           install: false
