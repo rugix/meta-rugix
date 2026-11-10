@@ -37,21 +37,29 @@ jobs:
         with:
           submodules: recursive
 
+      - uses: jdx/mise-action@8418fedb1110381a0d3ba51a7a415d7c1b884550 # v5.2.2
+        with:
+          install: false
+      - name: Install Project Tools
+        env:
+          MISE_GITHUB_TOKEN: ${{ github.token }}
+        run: mise install
+
       - name: Create KAS directories
         run: mkdir -p "$KAS_WORK_DIR" "$KAS_BUILD_DIR"
 
       - name: Validate KAS config and checkout layers
-        run: kas-container checkout "$KAS_FILES"
+        run: mise run kas -- checkout "$KAS_FILES"
 
       - name: Parse recipes
-        run: kas-container --runtime-args "-e SI_RUNNERS_PREMIRRORS" shell "$KAS_FILES" -c "bitbake -p"
+        run: mise run kas -- --runtime-args "-e SI_RUNNERS_PREMIRRORS" shell "$KAS_FILES" -c "bitbake -p"
 
       - name: Test optional features
         if: matrix.test_platform == 'qemux86-64'
-        run: kas-container shell "$KAS_FILES" -c "python3 /repo/tests/test_features.py"
+        run: mise run kas -- shell "$KAS_FILES" -c "python3 /repo/tests/test_features.py"
 
       - name: Build
-        run: kas-container --runtime-args "-e SI_RUNNERS_PREMIRRORS" build "$KAS_FILES"
+        run: mise run kas -- --runtime-args "-e SI_RUNNERS_PREMIRRORS" build "$KAS_FILES"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -64,11 +72,11 @@ jobs:
 
       - name: Prepare app test bundles
         if: matrix.test_platform
-        run: kas-container shell "$KAS_FILES" -c "python3 /repo/tests/prepare_app_bundles.py"
+        run: mise run kas -- shell "$KAS_FILES" -c "python3 /repo/tests/prepare_app_bundles.py"
 
       - name: Test
         if: matrix.test_platform
-        run: just test -k "${{ matrix.test_platform }} or docker_component_metadata"
+        run: mise run test -k "${{ matrix.test_platform }} or docker_component_metadata"
 
       - name: Upload test outputs
         if: matrix.test_platform && !cancelled()

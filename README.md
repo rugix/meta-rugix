@@ -39,7 +39,7 @@ unreleased changes, `PREFERRED_VERSION_rugix-ctrl = "0+git"` builds Rugix Ctrl f
 ## Getting Started
 
 We provide [kas](https://github.com/siemens/kas)-based [examples](./examples/) to help you get started quickly.
-Each active example has a matching KAS lockfile next to it. Update a lockfile with `kas lock examples/<example>.yaml` when intentionally moving the branch baseline forward.
+Each active example has a matching KAS lockfile next to it. Update a lockfile with `mise run kas -- lock examples/<example>.yaml` when intentionally moving the branch baseline forward.
 
 ## Provided Layers
 
@@ -201,7 +201,9 @@ IMAGE_INSTALL:append:my-machine = " packagegroup-rugix-bsp"
 
 ## Testing QEMU Images
 
-The QEMU integration tests require a built image, QEMU, `just`, and `uv`.
+The QEMU integration tests require a built image. Install Nix with flakes
+enabled and [mise](https://mise.jdx.dev/), then run `mise install` for
+Python and uv. The test tasks obtain QEMU from the pinned Nix environment.
 The test VM needs access to Docker Hub to pull the test container image.
 Before testing an image with Apps enabled, prepare the app bundles inside KAS.
 Yocto's native tools depend on paths and libraries in that build environment.
@@ -210,12 +212,12 @@ For example, build and test the ARM64 image with:
 
 ```sh
 git submodule update --init --recursive
-just build examples/qemu-arm64-uboot.yaml
-just kas shell examples/qemu-arm64-uboot.yaml -c "python3 /repo/tests/prepare_app_bundles.py"
-just test-arm64
+mise run build examples/qemu-arm64-uboot.yaml
+mise run kas shell examples/qemu-arm64-uboot.yaml -c "python3 /repo/tests/prepare_app_bundles.py"
+mise run test-arm64
 ```
 
-Use `examples/qemu-x86_64-grub.yaml` and `just test-x86_64` for x86-64.
+Use `examples/qemu-x86_64-grub.yaml` and `mise run test-x86_64` for x86-64.
 CI prepares these bundles before running the existing QEMU test jobs.
 
 ## Community Showcase
@@ -223,6 +225,18 @@ CI prepares these bundles before running the existing QEMU test jobs.
 - [Nexigon](https://github.com/nexigon) is a device management and remote access solution. Its [`meta-nexigon`](https://github.com/nexigon/meta-nexigon) layers come with an official Rugix integration, enabling seamless system updates through the cloud.
 - [Sulka](https://codeberg.org/AltidSec/meta-sulka-distro) is a Yocto Linux distribution with a strong focus on security hardening. Sulka comes with an official Rugix integration using Rugix Ctrl for secure, atomic OTA updates.
 - [thin-edge.io](https://github.com/thin-edge) is a lightweight edge agent for IoT devices. Its [`meta-tedge`](https://github.com/thin-edge/meta-tedge) layers come with an official Rugix integration, enabling seamless system updates through the cloud.
+
+## Development Environment
+
+Install Nix with flakes enabled and [mise](https://mise.jdx.dev/), then run
+`mise install`. Mise manages the Python tools; Nix supplies kas, Podman,
+QEMU, and OpenSSL on x86-64 and AArch64 Linux. Run tasks directly, without a
+prior `nix develop` step.
+
+The `kas` and `build` tasks share `scripts/kas.sh` for work-directory and
+container setup. Python test dependencies, including Rugix Testkit, are
+recorded in `pyproject.toml` and `uv.lock`.
+
 
 ## Support
 
