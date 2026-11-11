@@ -1,0 +1,11 @@
+[project]
+name = "meta-rugix-tests"
+version = "0.0.0"
+requires-python = ">=3.12"
+dependencies = [
+  "rugix-testkit @ git+https://github.com/rugix/rugix-testkit.git@118e7ba4e418e7d3adeafccad0314e043c239154",
+  "pytest-timeout>=2",
+]
+
+[tool.uv]
+package = false
